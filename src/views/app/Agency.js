@@ -12,6 +12,7 @@ import IntlMessages from 'helpers/IntlMessages';
 import { addNewAgencyApi } from 'api';
 
 const initialState = {
+  name: '',
   street_number: '',
   house_number: '',
   city: '',
@@ -30,14 +31,29 @@ const Agency = ({ modalOpen = true, history }) => {
     history.goBack();
   };
   const addNewAgency = async () => {
+   try{ const postal = parseInt(state.postal_code, 10);
+    const obj = {
+        "street_number": state.street_number,
+        "house_number": state.house_number,
+        "city": state.city,
+        "postal_code": postal,
+        "co": state.co,
+        "country": state.country  
+    }
+    console.log(state);
     setLoading(true);
-    const res = await addNewAgencyApi(state);
+    const res = await addNewAgencyApi(obj, state.name);
+    console.log("res",res);
     setLoading(false);
     if (res?.data) {
+      alert("worked")
       toggleModal();
     } else {
       alert('Error');
     }
+  }catch(error){
+    console.log("error in agency.js",error);
+  }
   };
 
   // Return
@@ -53,6 +69,16 @@ const Agency = ({ modalOpen = true, history }) => {
       </ModalHeader>
       <ModalBody>
         {/* Street Number */}
+        <Label className="mt-4">
+          <IntlMessages id="agency.name" />
+        </Label>
+        <Input
+          type="text"
+          defaultValue={state.name}
+          onChange={(event) =>
+            setState({ ...state, name: event.target.value })
+          }
+        />
         <Label className="mt-4">
           <IntlMessages id="agency.street_number" />
         </Label>

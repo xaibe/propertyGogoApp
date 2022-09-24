@@ -27,6 +27,7 @@ import {
 import TodoListItem from 'components/applications/TodoListItem';
 import AddNewTodoModal from 'containers/applications/AddNewTodoModal';
 import TodoApplicationMenu from 'containers/applications/TodoApplicationMenu';
+import { deleteAllUsers, getAllUsers } from 'api';
 
 
 const getIndex = (value, arr, prop) => {
@@ -41,7 +42,6 @@ const getIndex = (value, arr, prop) => {
 const TodoApp = ({
   match,
   intl,
-  todoItems,
   searchKeyword,
   loading,
   orderColumn,
@@ -56,6 +56,26 @@ const TodoApp = ({
   const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
   const [lastChecked, setLastChecked] = useState(null);
+
+  const [users, setUsers] = useState([]);
+
+  const loadUsers = async () => {
+    const res = await getAllUsers();
+    if (res?.data) {
+      setUsers(res.data);
+      console.log(res.data);
+    }
+   };
+
+   useEffect(() => {
+    loadUsers()
+ }, []);
+
+ const deleteUsers = async()=>{
+
+  const res = await deleteAllUsers(users.id);
+console.log(res);
+ }
 
   useEffect(() => {
     document.body.classList.add('right-menu');
@@ -80,7 +100,7 @@ const TodoApp = ({
     selectedTodoItemsChangeAction(selectedList);
 
     if (event.shiftKey) {
-      let items = todoItems;
+      let items = users;
       const start = getIndex(id, items, 'id');
       const end = getIndex(lastChecked, items, 'id');
       items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -96,10 +116,10 @@ const TodoApp = ({
 
   const handleChangeSelectAll = () => {
     if (loading) {
-      if (selectedItems.length >= todoItems.length) {
+      if (selectedItems.length >= users.length) {
         selectedTodoItemsChangeAction([]);
       } else {
-        selectedTodoItemsChangeAction(todoItems.map((x) => x.id));
+        selectedTodoItemsChangeAction(users.map((x) => x.id));
       }
     }
   };
@@ -134,14 +154,14 @@ const TodoApp = ({
                       className="custom-checkbox mb-0 d-inline-block"
                       type="checkbox"
                       id="checkAll"
-                      checked={selectedItems.length >= todoItems.length}
+                      checked={selectedItems.length >= users.length}
                       onClick={() => handleChangeSelectAll()}
                       onChange={() => handleChangeSelectAll()}
                       label={
                         <span
                           className={`custom-control-label ${
                             selectedItems.length > 0 &&
-                            selectedItems.length < todoItems.length
+                            selectedItems.length < users.length
                               ? 'indeterminate'
                               : ''
                           }`}
@@ -155,7 +175,7 @@ const TodoApp = ({
                     className="dropdown-toggle-split btn-lg"
                   />
                   <DropdownMenu right>
-                    <DropdownItem>
+                    <DropdownItem onClick={()=>{deleteUsers(users.id)}}>
                       <IntlMessages id="todo.action" />
                     </DropdownItem>
                     <DropdownItem>
@@ -222,7 +242,7 @@ const TodoApp = ({
           <Separator className="mb-5" />
           <Row>
             {loading ? (
-              todoItems.map((item, index) => (
+              users.map((item, index) => (
                 <TodoListItem
                   key={`todo_item_${index}`}
                   item={item}
@@ -247,7 +267,7 @@ const TodoApp = ({
 
 const mapStateToProps = ({ todoApp }) => {
   const {
-    todoItems,
+    
     searchKeyword,
     loading,
     orderColumn,
@@ -255,7 +275,7 @@ const mapStateToProps = ({ todoApp }) => {
     selectedItems,
   } = todoApp;
   return {
-    todoItems,
+    
     searchKeyword,
     loading,
     orderColumn,

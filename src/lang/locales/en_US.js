@@ -664,6 +664,7 @@ module.exports = {
   'wizard.async': 'Async save for 3 seconds!',
 
   'agency.title': 'Add New Agency',
+  'agency.name': 'Agency Name',
   'agency.street_number': 'Street Number',
   'agency.house_number': 'House Number',
   'agency.city': 'City',

@@ -49,9 +49,19 @@ export const loginApi = async (email, password) =>
 export const registerApi = async (email, password) =>
   await axiosApi.post(urls.REGISTER, {}, { email, password }).then((res) => res).catch((err) => err);;
 
-export const addNewAgencyApi = async (body) =>
-  await axiosApi.post(urls.ADD_NEW_AGENCY, body).then((res) => res).catch((err) => err);
+export const addNewAgencyApi = async (body, name) =>
+
+  await axiosApi.post(urls.ADD_NEW_AGENCY+name, body).then((res) => res).catch((err) => err);
 
 export const getAllAgenciesApi = async () =>
-  await axiosApi.get(urls.GET_ALL_AGENCIES).then((res) => res).catch((err) => err);;
+  await axiosApi.get(urls.GET_ALL_AGENCIES).then((res) => res).catch((err) => err);
 
+export const addNewUser = async (body, agencyId) =>
+  await axiosApi.post(urls.ADD_NEW_USER+agencyId , body).then((res) => res).catch((err) => err);
+
+  export const getAllUsers = async () =>
+  await axiosApi.get(urls.GET_ALL_USER).then((res) => res).catch((err) => err);
+
+  export const deleteAllUsers = async (id) =>
+  await axiosApi.get(urls.DELETE_ALL_USER+id).then((res) => res).catch((err) => err);
+  

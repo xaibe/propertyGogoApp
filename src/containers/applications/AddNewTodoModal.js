@@ -15,7 +15,7 @@ import CustomSelectInput from 'components/common/CustomSelectInput';
 import IntlMessages from 'helpers/IntlMessages';
 
 import { addTodoItem } from 'redux/actions';
-import { getAllAgenciesApi } from 'api';
+import { addNewUser, getAllAgenciesApi } from 'api';
 
 const initialState = {
   fullname: '',
@@ -31,35 +31,42 @@ const AddNewTodoModal = ({
   toggleModal,
 //   agency,
   roles,
-  addTodoItemAction,
 }) => {
   const [state, setState] = useState(initialState);
   const [agencies, setAgencies] = useState([]);
+  
 
   const loadAgencies = async () => {
     const res = await getAllAgenciesApi();
     if (res?.data) {
       setAgencies(res.data);
+      console.log(res.data);
     }
    };
+  
 
    useEffect(() => {
-      loadAgencies();
-   }, []);
+    loadAgencies();
+ }, []);
 
-  const addNetItem = () => {
-    const newItem = {
-      fullname: state.fullname,
-      email: state.email,
-      role: state.role.value,
-      agency: state.agency.value,
-      status: state.status,
-      description: state.description,
-    };
-    console.log(newItem);
-    addTodoItemAction(newItem);
+  const addUser = async() => {
+   const obj = {
+    
+      "email": state.email,
+      "name": state.fullname,
+      "description": state.description,
+      "status": state.status,
+      "roles": state.role.value
+    
+   }
+console.log("state",state);
+   const res = await addNewUser(obj, state.agency.value);
+   if (res?.data) {
+   
     toggleModal();
-    setState(initialState);
+  } else {
+    alert('Error');
+  }
   };
 
   return (
@@ -186,7 +193,7 @@ const AddNewTodoModal = ({
         <Button color="secondary" outline onClick={toggleModal}>
           <IntlMessages id="todo.cancel" />
         </Button>
-        <Button color="primary" onClick={() => addNetItem()}>
+        <Button color="primary" onClick={() => addUser()}>
           <IntlMessages id="todo.submit" />
         </Button>{' '}
       </ModalFooter>

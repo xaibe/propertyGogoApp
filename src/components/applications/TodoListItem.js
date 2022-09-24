@@ -23,20 +23,20 @@ const TodoListItem = ({ item, handleCheckChange, isSelected }) => {
                     : 'simple-icon-refresh heading-icon'
                 }`}
               />
-              <span className="align-middle d-inline-block">{item.fullname}</span>
+              <span className="align-middle d-inline-block">{item.name}</span>
             <p className="mx-4 text-muted text-small d-inline-block w-15 w-xs-100">
               {item.email}
             </p>
             </NavLink>
             <p className="mb-1 text-muted text-small w-15 w-xs-100">
-              {item.role}
+              {item.roles}
             </p>
             <p className="mb-1 text-muted text-small w-15 w-xs-100">
               {item.createDate}
             </p>
             <div className="w-15 w-xs-100">
               <Badge color={item.labelColor} pill>
-                {item.agency}
+                {item.status}
               </Badge>
             </div>
           </CardBody>
