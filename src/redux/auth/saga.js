@@ -1,7 +1,8 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { auth } from 'helpers/Firebase';
 import { adminRoot, currentUser } from 'constants/defaultValues';
-import { setCurrentUser } from 'helpers/Utils';
+import { getCurrentUser, setCurrentUser } from 'helpers/Utils';
+import { loginApi, registerApi } from 'api';
 import {
   LOGIN_USER,
   REGISTER_USER,
@@ -26,25 +27,24 @@ export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
 }
 
-const loginWithEmailPasswordAsync = async (email, password) =>
-  // eslint-disable-next-line no-return-await
-  await auth
-    .signInWithEmailAndPassword(email, password)
-    .then((user) => user)
-    .catch((error) => error);
+// eslint-disable-next-line no-return-await
+//   await auth
+//     .signInWithEmailAndPassword(email, password)
+//     .then((user) => user)
+//     .catch((error) => error);
 
 function* loginWithEmailPassword({ payload }) {
   const { email, password } = payload.user;
   const { history } = payload;
   try {
-    const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
-    if (!loginUser.message) {
-      const item = { uid: loginUser.user.uid, ...currentUser };
-      setCurrentUser(item);
-      yield put(loginUserSuccess(item));
-      history.push(adminRoot);
+    const res = yield call(loginApi, email, password);
+    if (res?.data?.access_token) {
+      setCurrentUser(res.data.access_token);
+      const user = getCurrentUser(res.data.access_token);
+      yield put(loginUserSuccess(user));
+      history.push('/');
     } else {
-      yield put(loginUserError(loginUser.message));
+      yield put(loginUserError(res?.message));
     }
   } catch (error) {
     yield put(loginUserError(error));
@@ -56,29 +56,19 @@ export function* watchRegisterUser() {
   yield takeEvery(REGISTER_USER, registerWithEmailPassword);
 }
 
-const registerWithEmailPasswordAsync = async (email, password) =>
-  // eslint-disable-next-line no-return-await
-  await auth
-    .createUserWithEmailAndPassword(email, password)
-    .then((user) => user)
-    .catch((error) => error);
-
 function* registerWithEmailPassword({ payload }) {
   const { email, password } = payload.user;
   const { history } = payload;
+
   try {
-    const registerUser = yield call(
-      registerWithEmailPasswordAsync,
-      email,
-      password
-    );
-    if (!registerUser.message) {
-      const item = { uid: registerUser.user.uid, ...currentUser };
+    const res = yield call(registerApi, email, password);
+    if (!res.message) {
+      const item = { uid: res.user.uid, ...currentUser };
       setCurrentUser(item);
       yield put(registerUserSuccess(item));
-      history.push(adminRoot);
+      history.push('/');
     } else {
-      yield put(registerUserError(registerUser.message));
+      yield put(registerUserError(res.message));
     }
   } catch (error) {
     yield put(registerUserError(error));

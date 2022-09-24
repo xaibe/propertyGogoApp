@@ -19,11 +19,7 @@ const INIT_STATE = {
   searchKeyword: '',
   orderColumn: null,
   loading: false,
-  agency: [
-    { label: 'EDUCATIONIONAL', color: 'secondary' },
-    { label: 'NEW FRAMEWORK', color: 'primary' },
-    { label: 'PERSONAL', color: 'info' },
-  ],
+  agency: [],
   orderColumns: [
     { column: 'fullname', label: 'Title' },
     { column: 'role', label: 'Role' },

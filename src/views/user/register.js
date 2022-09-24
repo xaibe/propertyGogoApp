@@ -15,18 +15,18 @@ import { registerUser } from 'redux/actions';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { adminRoot } from 'constants/defaultValues';
+// import { adminRoot } from 'constants/defaultValues';
 
-const Register = ({ history }) => {
+const Register = ({ history, loading, registerUserAction }) => {
   const [email] = useState('demo@gogo.com');
   const [password] = useState('gogo123');
   const [name] = useState('Sarah Kortney');
 
   const onUserRegister = () => {
     if (email !== '' && password !== '') {
-      history.push(adminRoot);
+      registerUserAction({ email, password }, history);
+      //    history.push(adminRoot);
     }
-    // call registerUserAction()
   };
 
   return (
@@ -79,6 +79,7 @@ const Register = ({ history }) => {
                   className="btn-shadow"
                   size="lg"
                   onClick={() => onUserRegister()}
+                  disabled={loading}
                 >
                   <IntlMessages id="user.register-button" />
                 </Button>
@@ -90,7 +91,10 @@ const Register = ({ history }) => {
     </Row>
   );
 };
-const mapStateToProps = () => {};
+const mapStateToProps = ({ authUser }) => {
+  const { loading, error } = authUser;
+  return { loading, error };
+};
 
 export default connect(mapStateToProps, {
   registerUserAction: registerUser,

@@ -6,6 +6,8 @@ import {
   themeColorStorageKey,
   themeRadiusStorageKey,
 } from 'constants/defaultValues';
+// eslint-disable-next-line camelcase
+import jwt_decode from 'jwt-decode';
 
 export const mapOrder = (array, order, key) => {
   // eslint-disable-next-line func-names
@@ -148,13 +150,10 @@ export const setCurrentLanguage = (locale) => {
   }
 };
 
-export const getCurrentUser = () => {
-  let user = null;
+export const getCurrentUser = (token) => {
+  let user = localStorage.getItem('access_token') || token;
   try {
-    user =
-      localStorage.getItem('gogo_current_user') != null
-        ? JSON.parse(localStorage.getItem('gogo_current_user'))
-        : null;
+    user = jwt_decode(user);
   } catch (error) {
     console.log('>>>>: src/helpers/Utils.js  : getCurrentUser -> error', error);
     user = null;
@@ -165,9 +164,9 @@ export const getCurrentUser = () => {
 export const setCurrentUser = (user) => {
   try {
     if (user) {
-      localStorage.setItem('gogo_current_user', JSON.stringify(user));
+      localStorage.setItem('access_token', user);
     } else {
-      localStorage.removeItem('gogo_current_user');
+      localStorage.removeItem('access_token');
     }
   } catch (error) {
     console.log('>>>>: src/helpers/Utils.js : setCurrentUser -> error', error);

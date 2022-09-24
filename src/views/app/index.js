@@ -63,13 +63,10 @@ const App = ({ match }) => {
               path={`${match.url}/blank-page`}
               render={(props) => <BlankPage {...props} />}
             />
-            
             <Route
               path={`${match.url}/agency`}
               render={(props) => <Agency {...props} />}
             />
-            
-            
             <Redirect to="/error" />
           </Switch>
         </Suspense>

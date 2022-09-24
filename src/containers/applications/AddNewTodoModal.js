@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   CustomInput,
@@ -15,25 +15,37 @@ import CustomSelectInput from 'components/common/CustomSelectInput';
 import IntlMessages from 'helpers/IntlMessages';
 
 import { addTodoItem } from 'redux/actions';
+import { getAllAgenciesApi } from 'api';
 
 const initialState = {
-  fullname: "",
-  email: "",
+  fullname: '',
+  email: '',
   role: {},
   agency: {},
-  description: "",
+  description: '',
   status: 'PENDING',
 };
-
 
 const AddNewTodoModal = ({
   modalOpen,
   toggleModal,
-  agency,
+//   agency,
   roles,
   addTodoItemAction,
 }) => {
   const [state, setState] = useState(initialState);
+  const [agencies, setAgencies] = useState([]);
+
+  const loadAgencies = async () => {
+    const res = await getAllAgenciesApi();
+    if (res?.data) {
+      setAgencies(res.data);
+    }
+   };
+
+   useEffect(() => {
+      loadAgencies();
+   }, []);
 
   const addNetItem = () => {
     const newItem = {
@@ -44,7 +56,7 @@ const AddNewTodoModal = ({
       status: state.status,
       description: state.description,
     };
-    console.log(newItem)
+    console.log(newItem);
     addTodoItemAction(newItem);
     toggleModal();
     setState(initialState);
@@ -81,7 +93,7 @@ const AddNewTodoModal = ({
             setState({ ...state, email: event.target.value })
           }
         />
-      
+
         <Label className="mt-4">
           <IntlMessages id="todo.description" />
         </Label>
@@ -115,10 +127,10 @@ const AddNewTodoModal = ({
           className="react-select"
           classNamePrefix="react-select"
           name="form-field-name"
-          options={agency.map((x, i) => {
+          options={agencies?.map((x, i) => {
             return {
-              label: x.label,
-              value: x.label,
+              label: x.name,
+              value: x.id,
               key: i,
               color: x.color,
             };
@@ -169,7 +181,6 @@ const AddNewTodoModal = ({
             })
           }
         />
-        
       </ModalBody>
       <ModalFooter>
         <Button color="secondary" outline onClick={toggleModal}>

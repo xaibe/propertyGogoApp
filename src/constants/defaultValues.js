@@ -1,6 +1,7 @@
 export const UserRole = {
   Admin: 0,
   Editor: 1,
+  SuperUser: 'SuperAdmin',
 };
 
 /* 
@@ -46,7 +47,7 @@ export const defaultColor = 'light.purplemonster';
 export const isDarkSwitchActive = true;
 export const defaultDirection = 'ltr';
 export const themeRadiusStorageKey = '__theme_radius';
-export const isAuthGuardActive = false;
+export const isAuthGuardActive = true;
 export const colors = [
   'bluenavy',
   'blueyale',

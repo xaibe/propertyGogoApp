@@ -15,6 +15,7 @@
     "classnames": "2.3.1",
     "firebase": "^8.6.5",
     "formik": "^2.2.9",
+    "jwt-decode": "^3.1.2",
     "moment": "2.29.1",
     "mousetrap": "^1.6.5",
     "node-sass": "^6.0.0",

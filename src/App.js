@@ -19,9 +19,7 @@ import {
 import { getDirection } from './helpers/Utils';
 import { ProtectedRoute } from './helpers/authHelper';
 
-const ViewHome = React.lazy(() =>
-  import(/* webpackChunkName: "views" */ './views/home')
-);
+
 const ViewApp = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './views/app')
 );
@@ -63,7 +61,7 @@ const App = ({ locale }) => {
                 <ProtectedRoute
                   path={adminRoot}
                   component={ViewApp}
-                  roles={[UserRole.Admin, UserRole.Editor]}
+                  roles={[UserRole.SuperUser, UserRole.Admin, UserRole.Editor]}
                 />
                 <Route
                   path="/user"
@@ -79,16 +77,7 @@ const App = ({ locale }) => {
                   exact
                   render={(props) => <ViewUnauthorized {...props} />}
                 />
-                <Route
-                // from="/" 
-                // to="/app/dashboards"
-                 path="/"
-                  exact
-                  render={(props) => <ViewHome {...props} />}
-                />
-                
                 <Redirect exact from="/" to="/app/dashboards" />
-               
                 <Redirect to="/error" />
               </Switch>
             </Router>
