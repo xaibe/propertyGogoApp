@@ -57,6 +57,8 @@ const TodoApp = ({
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
   const [lastChecked, setLastChecked] = useState(null);
 
+
+ 
   useEffect(() => {
     document.body.classList.add('right-menu');
     getTodoListAction();
@@ -70,7 +72,7 @@ const TodoApp = ({
     if (lastChecked == null) {
       setLastChecked(id);
     }
-
+console.log("selected items",selectedItems);
     let selectedList = Object.assign([], selectedItems);
     if (selectedList.includes(id)) {
       selectedList = selectedList.filter((x) => x !== id);

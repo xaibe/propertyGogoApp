@@ -56,6 +56,12 @@ export const addNewAgencyApi = async (body, name) =>
 export const getAllAgenciesApi = async () =>
   await axiosApi.get(urls.GET_ALL_AGENCIES).then((res) => res).catch((err) => err);
 
+  export const deleteAllAgenciesApi = async (id) =>
+  await axiosApi.delete(urls.DELETE_ALL_AGENCIES+id).then((res) => res).catch((err) => err);
+ 
+  export const updateAllAgenciesApi = async (body, id) =>
+  await axiosApi.patch(urls.UPDATE_ALL_AGENCIES+id, body).then((res) => res).catch((err) => err);
+
 export const addNewUser = async (body, agencyId) =>
   await axiosApi.post(urls.ADD_NEW_USER+agencyId , body).then((res) => res).catch((err) => err);
 
@@ -63,5 +69,8 @@ export const addNewUser = async (body, agencyId) =>
   await axiosApi.get(urls.GET_ALL_USER).then((res) => res).catch((err) => err);
 
   export const deleteAllUsers = async (id) =>
-  await axiosApi.get(urls.DELETE_ALL_USER+id).then((res) => res).catch((err) => err);
+  await axiosApi.delete(urls.DELETE_ALL_USER+id).then((res) => res).catch((err) => err);
+ 
+  export const updateAllUsers = async (body, id) =>
+  await axiosApi.patch(urls.UPDATE_ALL_USER+id, body).then((res) => res).catch((err) => err);
   

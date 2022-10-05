@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   CustomInput,
@@ -15,63 +15,56 @@ import CustomSelectInput from 'components/common/CustomSelectInput';
 import IntlMessages from 'helpers/IntlMessages';
 
 import { addTodoItem } from 'redux/actions';
-import { addNewUser, getAllAgenciesApi } from 'api';
+import {  updateAllUsers,  } from 'api';
 
-const initialState = {
-  fullname: '',
-  email: '',
-  role: {},
-  agency: {},
-  description: '',
-  status: 'PENDING',
-};
 
-const AddNewTodoModal = ({
-  modalOpen,
+
+const UpdateTodoModal = ({
+  emodalOpen,
   toggleModal,
 //   agency,
+isUpdate,
+setIsUpdate,
   roles,
 }) => {
-  const [state, setState] = useState(initialState);
-  const [agencies, setAgencies] = useState([]);
+  
+//   const [eagencies, seteAgencies] = useState([]);
   
 
-  const loadAgencies = async () => {
-    const res = await getAllAgenciesApi();
-    if (res?.data) {
-      setAgencies(res.data);
-      console.log(res.data);
+//   const loadAgencies = async () => {
+//     const res = await getAllAgenciesApi()
+//     if (res?.data) {
+//       seteAgencies(res.data);
+//       console.log(res.data);
+//     }
+//    };
+  
+//   //  const onChange = (e)=>{
+//   //   setIsUpdate({...isUpdate, [e.target.name]: e.target.value})
+//   //  }
+
+//    useEffect(() => {
+//     loadAgencies();
+//  }, []);
+
+  const refClose = useRef(null)
+
+  const addUser = async () => {
+    refClose.current.onClick();
+    console.log(isUpdate)
+   const obj = {   
+      "email": isUpdate.uemail,
+      "name": isUpdate.uname,
+      "description": isUpdate.edescription,
+      "status": isUpdate.estatus,
+      "roles": isUpdate.eroles.value
     }
-   };
-  
-
-   useEffect(() => {
-    loadAgencies();
- }, []);
-
-  const addUser = async() => {
-   const obj = {
     
-      "email": state.email,
-      "name": state.fullname,
-      "description": state.description,
-      "status": state.status,
-      "roles": state.role.value
-    
-   }
-console.log("state",state);
-   const res = await addNewUser(obj, state.agency.value);
-   console.log(res)
+   
+   const res = await updateAllUsers(obj, isUpdate.id);
    if (res?.data) {
+   
     toggleModal();
-    setState({
-      fullname: '',
-      email: '',
-      role: {},
-      agency: {},
-      description: '',
-      status: 'PENDING',
-    });
   } else {
     alert('Error');
   }
@@ -79,23 +72,25 @@ console.log("state",state);
 
   return (
     <Modal
-      isOpen={modalOpen}
+      isOpen={emodalOpen}
       toggle={toggleModal}
       wrapClassName="modal-right"
       backdrop="static"
     >
       <ModalHeader toggle={toggleModal}>
-        <IntlMessages id="todo.add-new-title" />
+        <IntlMessages id="todo.update-title" />
       </ModalHeader>
-      <ModalBody id='form'>
+      <ModalBody>
         <Label className="mt-4">
           <IntlMessages id="todo.fullname" />
         </Label>
         <Input
+        required
           type="text"
-          defaultValue={state.fullname}
+          name='uname'
+          value={isUpdate.uname}
           onChange={(event) =>
-            setState({ ...state, fullname: event.target.value })
+            setIsUpdate({ ...isUpdate, uname: event.target.value })
           }
         />
         <Label className="mt-4">
@@ -103,9 +98,11 @@ console.log("state",state);
         </Label>
         <Input
           type="email"
-          defaultValue={state.email}
+          required
+          name='uemail'
+          value={isUpdate.uemail}
           onChange={(event) =>
-            setState({ ...state, email: event.target.value })
+            setIsUpdate({ ...isUpdate, uemail: event.target.value })
           }
         />
 
@@ -114,9 +111,10 @@ console.log("state",state);
         </Label>
         <Input
           type="textarea"
-          defaultValue={state.description}
+          name='edescription'
+          value={isUpdate.edescription}
           onChange={(event) =>
-            setState({ ...state, description: event.target.value })
+            setIsUpdate({ ...isUpdate, edescription: event.target.value })
           }
         />
 
@@ -127,22 +125,22 @@ console.log("state",state);
           components={{ Input: CustomSelectInput }}
           className="react-select"
           classNamePrefix="react-select"
-          name="form-field-name"
+          name="eroles"
           options={roles.map((x, i) => {
             return { label: x, value: x, key: i };
           })}
-          value={state.role}
-          onChange={(val) => setState({ ...state, role: val })}
+          value={isUpdate.eroles}
+          onChange={(val) => setIsUpdate({ ...isUpdate, eroles: val })}
         />
-        <Label className="mt-4">
+        {/* <Label className="mt-4">
           <IntlMessages id="todo.agency" />
         </Label>
         <Select
           components={{ Input: CustomSelectInput }}
           className="react-select"
           classNamePrefix="react-select"
-          name="form-field-name"
-          options={agencies?.map((x, i) => {
+          name="eagency"
+          options={eagencies?.map((x, i) => {
             return {
               label: x.name,
               value: x.id,
@@ -150,9 +148,10 @@ console.log("state",state);
               color: x.color,
             };
           })}
-          value={state.agency}
-          onChange={(val) => setState({ ...state, agency: val })}
-        />
+          hidden
+          value={isUpdate.eagency}
+          onChange={(val) => setIsUpdate({ ...isUpdate, eagency: val })}
+        /> */}
 
         <Label className="mt-4">
           <IntlMessages id="todo.status" />
@@ -160,12 +159,12 @@ console.log("state",state);
         <CustomInput
           type="radio"
           id="exCustomRadio"
-          name="customRadio"
+          name="estatus"
           label="Active"
-          checked={state.status === 'Active'}
+          checked={isUpdate.estatus === 'Active'}
           onChange={(event) =>
-            setState({
-              ...state,
+            setIsUpdate({
+              ...isUpdate,
               status: event.target.value === 'on' ? 'Active' : '',
             })
           }
@@ -173,36 +172,34 @@ console.log("state",state);
         <CustomInput
           type="radio"
           id="exCustomRadio2"
-          name="customRadio2"
+          name="estatus"
           label="In-Progress"
-          checked={state.status === 'In-Progress'}
+          checked={isUpdate.estatus === 'In-Progress'}
           onChange={(event) =>
-            setState({
-              ...state,
+            setIsUpdate({
+              ...isUpdate,
               status: event.target.value === 'on' ? 'In-Progress' : '',
-            })
-          }
+            })}
         />
         <CustomInput
           type="radio"
           id="exCustomRadio4"
-          name="customRadio4"
+          name="estatus"
           label="Archieved"
-          checked={state.status === 'Archieved'}
+          checked={isUpdate.estatus === 'Archieved'}
           onChange={(event) =>
-            setState({
-              ...state,
+            setIsUpdate({
+              ...isUpdate,
               status: event.target.value === 'on' ? 'Archieved' : '',
-            })
-          }
+            })}
         />
       </ModalBody>
       <ModalFooter>
-        <Button color="secondary" outline onClick={toggleModal}>
+        <Button ref={refClose} color="secondary" outline onClick={toggleModal}>
           <IntlMessages id="todo.cancel" />
         </Button>
         <Button color="primary" onClick={() => addUser()}>
-          <IntlMessages id="todo.submit" />
+          <IntlMessages id="todo.update" />
         </Button>{' '}
       </ModalFooter>
     </Modal>
@@ -218,4 +215,4 @@ const mapStateToProps = ({ todoApp }) => {
 };
 export default connect(mapStateToProps, {
   addTodoItemAction: addTodoItem,
-})(AddNewTodoModal);
+})(UpdateTodoModal);

@@ -3,11 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Row,
   Button,
-  UncontrolledDropdown,
+  // UncontrolledDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
-  Collapse,
+  // Collapse,
   ButtonDropdown,
   CustomInput,
 } from 'reactstrap';
@@ -24,11 +24,13 @@ import {
   getTodoListSearch,
   selectedTodoItemsChange,
 } from 'redux/actions';
-import TodoListItem from 'components/applications/TodoListItem';
-import AddNewTodoModal from 'containers/applications/AddNewTodoModal';
-import TodoApplicationMenu from 'containers/applications/TodoApplicationMenu';
-import { deleteAllUsers, getAllUsers } from 'api';
-import UpdateTodoModal from 'containers/applications/UpdateTodoModal';
+// import TodoListItem from 'components/applications/TodoListItem';
+// import TodoApplicationMenu from 'containers/applications/TodoApplicationMenu';
+import AgencyListItem from 'components/applications/AgencyListItem';
+import { deleteAllAgenciesApi,  getAllAgenciesApi } from 'api';
+import AgencyModal from './AgencyModal';
+import UpdateAgencyModal from './UpdateAgencyModal';
+
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -39,17 +41,17 @@ const getIndex = (value, arr, prop) => {
   return -1;
 };
 
-const TodoApp = ({
+const AgencyApp = ({
   match,
-  intl,
-  searchKeyword,
+  // intl,
+  // searchKeyword,
   loading,
-  orderColumn,
-  orderColumns,
+  // orderColumn,
+  // orderColumns,
   selectedItems,
   getTodoListAction,
-  getTodoListWithOrderAction,
-  getTodoListSearchAction,
+  // getTodoListWithOrderAction,
+  // getTodoListSearchAction,
   selectedTodoItemsChangeAction,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -57,35 +59,42 @@ const TodoApp = ({
   const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
   const [lastChecked, setLastChecked] = useState(null);
+const [update, setUpdate] = useState([]);
+  const [agencies, setAgencies] = useState([]);
 
-  const [users, setUsers] = useState([]);
-  const [update, setUpdate] = useState([]);
-
- 
-
-  const loadUsers = async () => {
-    const res = await getAllUsers();
+  const loadAgencies = async () => {
+    const res = await getAllAgenciesApi();
     if (res?.data) {
-      setUsers(res.data);
-      await loadUsers();
-    }
-  };
+      setAgencies(res.data);
+      await loadAgencies();
 
-  useEffect(() => {
-    loadUsers();
+    }
+   };
+
+
+
+   useEffect(() => {
+    loadAgencies()
     // eslint-disable-next-line
-  }, []);
+ }, [agencies]);
 
-  const deleteUsers = async () => {
-    if (selectedItems.length === 1) {
-      await deleteAllUsers(selectedItems);
-    } else {
-      await selectedItems.forEach(async (item) => {
-        await deleteAllUsers(item);
-      });
+
+ const deleteAgencies = async()=>{
+    if(selectedItems.length===1){
+       await deleteAllAgenciesApi(selectedItems);
+      
+    
     }
-    await loadUsers();
-  };
+    else{
+      
+      await selectedItems.forEach( async (item) => {
+        await deleteAllAgenciesApi(item);
+      });
+    
+    }
+    await loadAgencies();
+  }
+ 
 
   useEffect(() => {
     document.body.classList.add('right-menu');
@@ -95,13 +104,11 @@ const TodoApp = ({
       document.body.classList.remove('right-menu');
     };
   }, [getTodoListAction]);
-  
+
   const handleCheckChange = (event, gotItem) => {
     if (lastChecked == null) {
       setLastChecked(gotItem.id);
     }
-console.log("main got item hu", gotItem)
-
 
     let selectedList = Object.assign([], selectedItems);
     if (selectedList.includes(gotItem.id)) {
@@ -110,13 +117,10 @@ console.log("main got item hu", gotItem)
       selectedList.push(gotItem.id);
     }
     selectedTodoItemsChangeAction(selectedList);
-    console.log(selectedList);
-    console.log(selectedItems);
-    setUpdate(gotItem);
-   
-
+    setUpdate(gotItem)
+    console.log("agency update data", update.Address)
     if (event.shiftKey) {
-      let items = users;
+      let items = agencies;
       const start = getIndex(update.id, items, 'id');
       const end = getIndex(lastChecked, items, 'id');
       items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -125,8 +129,6 @@ console.log("main got item hu", gotItem)
           return item.id;
         })
       );
-     
-     console.log(update)
       selectedList = Array.from(new Set(selectedList));
       selectedTodoItemsChangeAction(selectedList);
     }
@@ -134,58 +136,68 @@ console.log("main got item hu", gotItem)
 
   const handleChangeSelectAll = () => {
     if (loading) {
-      if (selectedItems.length >= users.length) {
+      if (selectedItems.length >= agencies.length) {
         selectedTodoItemsChangeAction([]);
       } else {
-        selectedTodoItemsChangeAction(users.map((x) => x.id));
+        selectedTodoItemsChangeAction(agencies.map((x) => x.id));
       }
     }
   };
-  
+
 
   const initialState = {
-    id: '',
-    uname: '',
-    uemail: '',
-    eroles: {},
-    edescription: '',
-    estatus: '',
+    eid: '',
+    ename: '',
+    estreet_number: '',
+    ehouse_number: '',
+    ecity: '',
+    epostal_code: 0,
+    eco: '',
+    ecountry: '',
   };
-  const [isUpdate, setIsUpdate] = useState(initialState);
+  const [agencyUpdate, setAgencyUpdate] = useState(initialState)
 
-const ref = useRef(null);
-const updateTodo = (currentUser)=>{
-  console.log("current user",currentUser);
+  const ref = useRef(null);
+ 
+
+const updateAgency = (currentAgency)=>{
   ref.current.onClick();
-  setIsUpdate(
-    {
-      id: currentUser.id,
-      uname: currentUser.name,
-      uemail: currentUser.email,
-      eroles: currentUser.roles,
-      edescription: currentUser.description,
-      estatus: currentUser.status
-    }
 
-  );
-  console.log("update hu updatetodo wala",currentUser)
+  setAgencyUpdate({
+    id: currentAgency.id,
+    ename: currentAgency.name, 
+    estreet_number: currentAgency.Address.street_number,
+    ehouse_number: currentAgency.Address.house_number,
+    ecity:  currentAgency.Address.city,
+    epostal_code: currentAgency.Address.postal_code,
+    eco: currentAgency.Address.co,
+    ecountry: currentAgency.Address.country
+  });
+  console.log("agency update data", currentAgency)
+
+  // console.log(selectedItems)
+  // document.getElementsByClassName('cell')[selectedItems].click()
 
   
+ 
+// setAgencies(currentAgencies)ag
 }
-  const { messages } = intl;
-// console.log(gotItem)
+  // const { messages } = intl;
+
   return (
     <>
       <Row className="app-row survey-app">
         <Colxx xxs="12">
           <div className="mb-2">
             <h1>
-              <IntlMessages id="menu.todo" />
+              <IntlMessages id="menu.agency" />
             </h1>
-            <Breadcrumb match={match} />
+            <Breadcrumb  match={match} />
+           
             {loading && (
-              <div className="text-zero top-right-button-container">
+              <div  className="text-zero top-right-button-container">
                 <Button
+                 
                   color="primary"
                   size="lg"
                   className="top-right-button"
@@ -202,14 +214,14 @@ const updateTodo = (currentUser)=>{
                       className="custom-checkbox mb-0 d-inline-block"
                       type="checkbox"
                       id="checkAll"
-                      checked={selectedItems.length >= users.length}
+                      checked={selectedItems.length >= agencies.length}
                       onClick={() => handleChangeSelectAll()}
                       onChange={() => handleChangeSelectAll()}
                       label={
                         <span
                           className={`custom-control-label ${
                             selectedItems.length > 0 &&
-                            selectedItems.length < users.length
+                            selectedItems.length < agencies.length
                               ? 'indeterminate'
                               : ''
                           }`}
@@ -223,14 +235,10 @@ const updateTodo = (currentUser)=>{
                     className="dropdown-toggle-split btn-lg"
                   />
                   <DropdownMenu right>
-                    <DropdownItem
-                      onClick={() => {
-                        deleteUsers(selectedItems);
-                      }}
-                    >
+                    <DropdownItem onClick={()=>{deleteAgencies(selectedItems)}}>
                       <IntlMessages id="todo.action" />
                     </DropdownItem>
-                    <DropdownItem onClick={()=>{updateTodo(update)}}>
+                    <DropdownItem  onClick={() => {updateAgency(update)}}>
                       <IntlMessages id="todo.another-action" />
                     </DropdownItem>
                   </DropdownMenu>
@@ -238,10 +246,12 @@ const updateTodo = (currentUser)=>{
               </div>
             )}
             {/* <Breadcrumb match={match} /> */}
+           
           </div>
 
           <div className="mb-2">
             <Button
+           
               color="empty"
               className="pt-0 pl-0 d-inline-block d-md-none"
               onClick={() => setDisplayOptionsIsOpen(!displayOptionsIsOpen)}
@@ -249,7 +259,7 @@ const updateTodo = (currentUser)=>{
               <IntlMessages id="todo.display-options" />{' '}
               <i className="simple-icon-arrow-down align-middle" />
             </Button>
-            <Collapse
+            {/* <Collapse
               id="displayOptions"
               className="d-md-block"
               isOpen={displayOptionsIsOpen}
@@ -288,13 +298,13 @@ const updateTodo = (currentUser)=>{
                   />
                 </div>
               </div>
-            </Collapse>
+            </Collapse> */}
           </div>
           <Separator className="mb-5" />
           <Row>
             {loading ? (
-              users.map((item, index) => (
-                <TodoListItem
+              agencies.map((item, index) => (
+                <AgencyListItem
                   key={`todo_item_${index}`}
                   item={item}
                   handleCheckChange={handleCheckChange}
@@ -307,37 +317,35 @@ const updateTodo = (currentUser)=>{
           </Row>
         </Colxx>
       </Row>
-      <Button
-      ref={ref}
-      hidden
-        onClick={() => {
-          setEModalOpen(!emodalOpen);
-        }}
-      >
-        update
-      </Button>
-      {loading && <TodoApplicationMenu />}
-      <AddNewTodoModal
+      <AgencyModal
         toggleModal={() => setModalOpen(!modalOpen)}
         modalOpen={modalOpen}
       />
-      <UpdateTodoModal
-        onClose={() => {
-          setEModalOpen(false);
-        }}
-        toggleModal={() => setEModalOpen(!emodalOpen)}
+      <Button ref={ref} className='cell' hidden onClick={()=>{setEModalOpen(!emodalOpen)}}>
+        update
+      </Button>
+      <UpdateAgencyModal
+      selectedItems = {selectedItems}
+      toggleModal={() => setEModalOpen(!emodalOpen)}
         emodalOpen={emodalOpen}
-        isUpdate={isUpdate}
-        setIsUpdate={setIsUpdate}
+        agencyUpdate={agencyUpdate}
+        setAgencyUpdate={setAgencyUpdate}
       />
     </>
   );
 };
 
 const mapStateToProps = ({ todoApp }) => {
-  const { searchKeyword, loading, orderColumn, orderColumns, selectedItems } =
-    todoApp;
+  const {
+    
+    searchKeyword,
+    loading,
+    orderColumn,
+    orderColumns,
+    selectedItems,
+  } = todoApp;
   return {
+    
     searchKeyword,
     loading,
     orderColumn,
@@ -351,5 +359,5 @@ export default injectIntl(
     getTodoListWithOrderAction: getTodoListWithOrder,
     getTodoListSearchAction: getTodoListSearch,
     selectedTodoItemsChangeAction: selectedTodoItemsChange,
-  })(TodoApp)
+  })(AgencyApp)
 );

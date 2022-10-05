@@ -4,24 +4,26 @@ import { connect } from 'react-redux';
 
 import AppLayout from 'layout/AppLayout';
 
-
-import Agency from './Agency';
+import Agency from './new';
 // import { ProtectedRoute, UserRole } from 'helpers/authHelper';
 
 const Dashboards = React.lazy(() =>
   import(/* webpackChunkName: "dashboards" */ './dashboards')
 );
-const Pages = React.lazy(() =>
-  import(/* webpackChunkName: "pages" */ './pages')
-);
+// const Agency = React.lazy(() =>
+//   import(/* webpackChunkName: "Agency" */ './new')
+// );
+// const Pages = React.lazy(() =>
+//   import(/* webpackChunkName: "pages" */ './pages')
+// );
 const Settings = React.lazy(() =>
   import(/* webpackChunkName: "settings" */ './settings')
 );
-const Ui = React.lazy(() => import(/* webpackChunkName: "ui" */ './ui'));
-const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
-const BlankPage = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './blank-page')
-);
+// const Ui = React.lazy(() => import(/* webpackChunkName: "ui" */ './ui'));
+// const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
+// const BlankPage = React.lazy(() =>
+//   import(/* webpackChunkName: "blank-page" */ './blank-page')
+// );
 
 const App = ({ match }) => {
   return (
@@ -47,24 +49,24 @@ const App = ({ match }) => {
                     component={Applications}
                     roles={[UserRole.Admin]}
             /> */}
-            <Route
+            {/* <Route
               path={`${match.url}/pages`}
               render={(props) => <Pages {...props} />}
-            />
-            <Route
+            /> */}
+            {/* <Route
               path={`${match.url}/ui`}
               render={(props) => <Ui {...props} />}
-            />
-            <Route
+            /> */}
+            {/* <Route
               path={`${match.url}/menu`}
               render={(props) => <Menu {...props} />}
-            />
-            <Route
+            /> */}
+            {/* <Route
               path={`${match.url}/blank-page`}
               render={(props) => <BlankPage {...props} />}
-            />
+            /> */}
             <Route
-              path={`${match.url}/agency`}
+              path={`${match.url}/new`}
               render={(props) => <Agency {...props} />}
             />
             <Redirect to="/error" />

@@ -5,15 +5,15 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const DashboardDefault = React.lazy(() =>
   import(/* webpackChunkName: "dashboard-default" */ './default')
 );
-const ContentDefault = React.lazy(() =>
-  import(/* webpackChunkName: "dashboard-content" */ './content')
-);
-const AnalyticsDefault = React.lazy(() =>
-  import(/* webpackChunkName: "dashboard-analytics" */ './analytics')
-);
-const EcommerceDefault = React.lazy(() =>
-  import(/* webpackChunkName: "dashboard-ecommerce" */ './ecommerce')
-);
+// const ContentDefault = React.lazy(() =>
+//   import(/* webpackChunkName: "dashboard-content" */ './content')
+// );
+// const AnalyticsDefault = React.lazy(() =>
+//   import(/* webpackChunkName: "dashboard-analytics" */ './analytics')
+// );
+// const EcommerceDefault = React.lazy(() =>
+//   import(/* webpackChunkName: "dashboard-ecommerce" */ './ecommerce')
+// );
 
 const Dashboards = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
@@ -23,7 +23,7 @@ const Dashboards = ({ match }) => (
         path={`${match.url}/default`}
         render={(props) => <DashboardDefault {...props} />}
       />
-      <Route
+      {/* <Route
         path={`${match.url}/content`}
         render={(props) => <ContentDefault {...props} />}
       />
@@ -34,7 +34,7 @@ const Dashboards = ({ match }) => (
       <Route
         path={`${match.url}/analytics`}
         render={(props) => <AnalyticsDefault {...props} />}
-      />
+      /> */}
       {/* 
       <ProtectedRoute
         path={`${match.url}/default`}

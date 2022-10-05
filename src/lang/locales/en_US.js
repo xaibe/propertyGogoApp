@@ -54,11 +54,13 @@ module.exports = {
   'user.login-button': 'LOGIN',
   'user.register-button': 'REGISTER',
   'user.reset-password-button': 'RESET',
+  'user.set-password-button': 'SUBMIT',
   'user.buy': 'BUY',
   'user.username': 'Username',
   'user.new-password-again': 'New Password Again',
   'user.new-password': 'New Password',
   'user.reset-password': 'Reset Password',
+  'user.set-password': 'Enter Your Password',
   /* 03.Menu */
   'menu.home': 'Home',
   'menu.interface': 'Interface',
@@ -161,6 +163,8 @@ module.exports = {
   'menu.layouts': 'Layouts',
   'menu.validations': 'Validations',
   'menu.wizard': 'Wizard',
+  'menu.agency': 'Agency',
+  'menu.agencyapp': 'Agency ',
 
   /* 04.Dashboards */
   'dashboards.pending-orders': 'Pending Orders',
@@ -309,6 +313,7 @@ module.exports = {
   /* 06.03.Todo */
   'todo.add-new': 'ADD NEW',
   'todo.add-new-title': 'Add New User',
+  'todo.update-title': 'Update User',
   'todo.fullname': 'Full Name',
   'todo.email': 'E-mail',
   'todo.role': 'Role',
@@ -326,6 +331,7 @@ module.exports = {
   'todo.completed-tasks': 'Completed Tasks',
   'todo.categories': 'Categories',
   'todo.labels': 'Labels',
+  'todo.update': 'Update',
 
   /* 07.UI */
 
@@ -664,6 +670,8 @@ module.exports = {
   'wizard.async': 'Async save for 3 seconds!',
 
   'agency.title': 'Add New Agency',
+  'agency.etitle': 'Update Agency',
+  'agency.update': 'Update',
   'agency.name': 'Agency Name',
   'agency.street_number': 'Street Number',
   'agency.house_number': 'House Number',

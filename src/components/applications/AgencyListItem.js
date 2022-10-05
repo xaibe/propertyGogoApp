@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card, CardBody, Badge, CustomInput } from 'reactstrap';
+import { Card, CardBody, CustomInput } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 import { Colxx } from '../common/CustomBootstrap';
 
-const TodoListItem = ({ item, handleCheckChange, isSelected }) => {
+const AgencyListItem = ({ item, handleCheckChange, isSelected }) => {
   return (
     <Colxx xxs="12">
       <Card className="card d-flex mb-3">
@@ -24,21 +24,21 @@ const TodoListItem = ({ item, handleCheckChange, isSelected }) => {
                 }`}
               />
               <span className="align-middle d-inline-block">{item.name}</span>
-            <p className="mx-4 text-muted text-small d-inline-block w-15 w-xs-100">
+            {/* <p className="mx-4 text-muted text-small d-inline-block w-15 w-xs-100">
               {item.email}
-            </p>
+            </p> */}
             </NavLink>
-            <p className="mb-1 text-muted text-small w-15 w-xs-100">
+            {/* <p className="mb-1 text-muted text-small w-15 w-xs-100">
               {item.roles}
-            </p>
-            <p className="mb-1 text-muted text-small w-15 w-xs-100">
+            </p> */}
+            {/* <p className="mb-1 text-muted text-small w-15 w-xs-100">
               {item.createDate}
-            </p>
-            <div className="w-15 w-xs-100">
+            </p> */}
+            {/* <div className="w-15 w-xs-100">
               <Badge color={item.labelColor} pill>
                 {item.status}
               </Badge>
-            </div>
+            </div> */}
           </CardBody>
           <div className="custom-control custom-checkbox pl-1 align-self-center mr-4">
             <CustomInput
@@ -51,12 +51,12 @@ const TodoListItem = ({ item, handleCheckChange, isSelected }) => {
             />
           </div>
         </div>
-        <div className="card-body pt-1">
+        {/* <div className="card-body pt-1">
           <p className="mb-0">{item.description}</p>
-        </div>
+        </div> */}
       </Card>
     </Colxx>
   );
 };
 
-export default React.memo(TodoListItem);
+export default React.memo(AgencyListItem);
