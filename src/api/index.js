@@ -74,3 +74,14 @@ export const addNewUser = async (body, agencyId) =>
   export const updateAllUsers = async (body, id) =>
   await axiosApi.patch(urls.UPDATE_ALL_USER+id, body).then((res) => res).catch((err) => err);
   
+  export const setPassword = async (body, hash, email) =>
+  await axiosApi.post(urls.SET_PASSWORD+hash+email, body).then((res) => res).catch((err) => err);
+  
+  export const addAddressApi = async (body,id) =>
+  await axiosApi.post(urls.SET_ADDRESS+id, body).then((res) => res).catch((err) => err);
+
+  export const updateProfileAddressApi = async (body,id) =>
+  await axiosApi.patch(urls.UPDATE_PROFILE_ADDRESS+id, body).then((res) => res).catch((err) => err);
+  export const uploadImages = async (body) =>
+  await axiosApi.post(urls.UPLOAD_IMAGES, body).then((res) => res).catch((err) => err);
+

@@ -16,65 +16,96 @@ import IntlMessages from 'helpers/IntlMessages';
 
 import { addTodoItem } from 'redux/actions';
 import { addNewUser, getAllAgenciesApi } from 'api';
+import { NotificationManager } from 'components/common/react-notifications';
 
 const initialState = {
-  fullname: '',
+  firstName: '',
+  lastName: '',
+  userName: '',
   email: '',
-  role: {},
-  agency: {},
+  role: '',
+  agency: '',
   description: '',
-  status: 'PENDING',
+  status: '',
 };
 
 const AddNewTodoModal = ({
   modalOpen,
   toggleModal,
-//   agency,
+  //   agency,
+  // addTodoItemAction,
+
   roles,
 }) => {
   const [state, setState] = useState(initialState);
   const [agencies, setAgencies] = useState([]);
-  
 
   const loadAgencies = async () => {
     const res = await getAllAgenciesApi();
     if (res?.data) {
       setAgencies(res.data);
-      console.log(res.data);
+      // console.log(res.data);
+    } else {
+      NotificationManager.warning(
+        'Network Issue!',
+        'Error',
+        3000,
+        null,
+        null,
+        ''
+      );
     }
-   };
-  
+  };
 
-   useEffect(() => {
+  useEffect(() => {
     loadAgencies();
- }, []);
+  }, []);
 
-  const addUser = async() => {
-   const obj = {
-    
-      "email": state.email,
-      "name": state.fullname,
-      "description": state.description,
-      "status": state.status,
-      "roles": state.role.value
-    
-   }
-console.log("state",state);
-   const res = await addNewUser(obj, state.agency.value);
-   console.log(res)
-   if (res?.data) {
-    toggleModal();
-    setState({
-      fullname: '',
-      email: '',
-      role: {},
-      agency: {},
-      description: '',
-      status: 'PENDING',
-    });
-  } else {
-    alert('Error');
-  }
+  const addUser = async () => {
+    const obj = {
+      email: state.email,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      userName: state.userName,
+      description: state.description,
+      status: state.status,
+      roles: state.role.value,
+    };
+    //  console.log(state.agency.value)
+
+    // console.log("state",state);
+    const res = await addNewUser(obj, state.agency.value);
+    //  console.log(res)
+    if (res?.data) {
+      NotificationManager.success(
+        'User Created Successfully!',
+        'Success!',
+        3000,
+        null,
+        null,
+        ''
+      );
+      toggleModal();
+      setState({
+        firstName: '',
+        lastName: '',
+        userName: '',
+        email: '',
+        role: '',
+        agency: '',
+        description: '',
+        status: '',
+      });
+    } else {
+      NotificationManager.warning(
+        'This User Already Exist',
+        'Error!',
+        3000,
+        null,
+        null,
+        ''
+      );
+    }
   };
 
   return (
@@ -87,15 +118,35 @@ console.log("state",state);
       <ModalHeader toggle={toggleModal}>
         <IntlMessages id="todo.add-new-title" />
       </ModalHeader>
-      <ModalBody id='form'>
+      <ModalBody id="form">
         <Label className="mt-4">
-          <IntlMessages id="todo.fullname" />
+          <IntlMessages id="todo.firstname" />
         </Label>
         <Input
           type="text"
-          defaultValue={state.fullname}
+          defaultValue={state.firstName}
           onChange={(event) =>
-            setState({ ...state, fullname: event.target.value })
+            setState({ ...state, firstName: event.target.value })
+          }
+        />
+        <Label className="mt-4">
+          <IntlMessages id="todo.lastname" />
+        </Label>
+        <Input
+          type="text"
+          defaultValue={state.lastName}
+          onChange={(event) =>
+            setState({ ...state, lastName: event.target.value })
+          }
+        />
+        <Label className="mt-4">
+          <IntlMessages id="todo.username" />
+        </Label>
+        <Input
+          type="text"
+          defaultValue={state.userName}
+          onChange={(event) =>
+            setState({ ...state, userName: event.target.value })
           }
         />
         <Label className="mt-4">
@@ -157,52 +208,27 @@ console.log("state",state);
         <Label className="mt-4">
           <IntlMessages id="todo.status" />
         </Label>
-        <CustomInput
-          type="radio"
-          id="exCustomRadio"
-          name="customRadio"
-          label="Active"
-          checked={state.status === 'Active'}
-          onChange={(event) =>
-            setState({
-              ...state,
-              status: event.target.value === 'on' ? 'Active' : '',
-            })
-          }
-        />
-        <CustomInput
-          type="radio"
-          id="exCustomRadio2"
-          name="customRadio2"
-          label="In-Progress"
-          checked={state.status === 'In-Progress'}
-          onChange={(event) =>
-            setState({
-              ...state,
-              status: event.target.value === 'on' ? 'In-Progress' : '',
-            })
-          }
-        />
-        <CustomInput
-          type="radio"
-          id="exCustomRadio4"
-          name="customRadio4"
-          label="Archieved"
-          checked={state.status === 'Archieved'}
-          onChange={(event) =>
-            setState({
-              ...state,
-              status: event.target.value === 'on' ? 'Archieved' : '',
-            })
-          }
-        />
+        {['Active', 'In-Progress', 'Archieved'].map((itm, idx) => (
+          <CustomInput
+            key={idx?.toString()}
+            type="radio"
+            label={itm}
+            checked={state.status === itm}
+            onClick={() => {
+              setState({ ...state, status: itm });
+            }}
+            onChange={() => {
+              setState({ ...state, status: itm });
+            }}
+          />
+        ))}
       </ModalBody>
       <ModalFooter>
         <Button color="secondary" outline onClick={toggleModal}>
           <IntlMessages id="todo.cancel" />
         </Button>
         <Button color="primary" onClick={() => addUser()}>
-          <IntlMessages id="todo.submit" />
+          Submit
         </Button>{' '}
       </ModalFooter>
     </Modal>

@@ -11,6 +11,7 @@ import {
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { updateAllAgenciesApi } from 'api';
+import { NotificationManager } from 'components/common/react-notifications';
 // import { updateAgencyApi } from 'api';
 
 const UpdateAgencyModal = ({
@@ -48,9 +49,20 @@ const UpdateAgencyModal = ({
     }
     const res = await updateAllAgenciesApi(obj, agencyUpdate.id)
     if(res?.data){
-      alert('worked')
+      NotificationManager.success('Agency Updated Successfully!',"Success!",  3000, null, null, '');
+      toggleModal();
+      setAgencyUpdate({
+        eid: '',
+        ename: '',
+        estreet_number: '',
+        ehouse_number: '',
+        ecity: '',
+        epostal_code: 0,
+        eco: '',
+        ecountry: '',
+      })
     } else {
-      alert('error')
+      NotificationManager.warning('Agency Already Exist!',"Error!",  3000, null, null, '');
     }
   };
 

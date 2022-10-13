@@ -1,5 +1,6 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { getDateWithFormat } from 'helpers/Utils';
+// import { getDateWithFormat } from 'helpers/Utils';
+import { addNewUser } from 'api';
 
 import todoData from 'data/todos.json';
 import { TODO_GET_LIST, TODO_ADD_ITEM } from '../actions';
@@ -31,26 +32,28 @@ function* getTodoListItems() {
   }
 }
 
-const addTodoItemRequest = async (item) => {
-  const items = todoData.data;
-  // eslint-disable-next-line no-param-reassign
-  item.id = items.length + 1;
-  // eslint-disable-next-line no-param-reassign
-  item.createDate = getDateWithFormat();
-  items.splice(0, 0, item);
-  // eslint-disable-next-line no-return-await
-  return await new Promise((success) => {
-    setTimeout(() => {
-      success(items);
-    }, 1000);
-  })
-    .then((response) => response)
-    .catch((error) => error);
-};
+// const addTodoItemRequest = async (item) => {
+//   const items = todoData.data;
+//   // eslint-disable-next-line no-param-reassign
+//   item.id = items.length + 1;
+//   // eslint-disable-next-line no-param-reassign
+//   item.createDate = getDateWithFormat();
+//   items.splice(0, 0, item);
+//   // eslint-disable-next-line no-return-await
+//   return await new Promise((success) => {
+//     setTimeout(() => {
+//       success(items);
+//     }, 1000);
+//   })
+//     .then((response) => response)
+//     .catch((error) => error);
+// };
 
-function* addTodoItem({ payload }) {
+function* addTodoItem({ item, id }) {
+  console.log("id", id);
+  console.log("item", item);
   try {
-    const response = yield call(addTodoItemRequest, payload);
+    const response = yield call(addNewUser, item);
     yield put(addTodoItemSuccess(response));
   } catch (error) {
     yield put(addTodoItemError(error));

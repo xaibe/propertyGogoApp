@@ -42,5 +42,6 @@ const ProtectedRoute = ({
   return <Route {...rest} render={setComponent} />;
 };
 
+export const PASSWORD_REGEX = /^(?=(.*[a-z]){3,})(?=(.*[A-Z]){2,})(?=(.*[0-9]){2,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$/;
 // eslint-disable-next-line import/prefer-default-export
 export { ProtectedRoute };

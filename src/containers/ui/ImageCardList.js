@@ -22,13 +22,13 @@ const ImageCardList = () => {
         <Row>
           <Colxx xxs="12">
             <Card className="d-flex flex-row mb-3">
-              <NavLink to="#" location={{}} className="d-flex">
+              {/* <NavLink to="#" location={{}} className="d-flex">
                 <img
                   alt="Thumbnail"
                   src="/assets/img/products/chocolate-cake-thumb.jpg"
                   className="list-thumbnail responsive border-0 card-img-left"
                 />
-              </NavLink>
+              </NavLink> */}
               <div className="pl-2 d-flex flex-grow-1 min-width-zero">
                 <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
                   <NavLink to="#" location={{}} className="w-40 w-sm-100">
@@ -38,7 +38,7 @@ const ImageCardList = () => {
                   </NavLink>
                   <p className="mb-1 text-muted text-small w-15 w-sm-100">
                     Cakes
-                  </p>
+                  </p> <br />
                   <p className="mb-1 text-muted text-small w-15 w-sm-100">
                     09.04.2018
                   </p>

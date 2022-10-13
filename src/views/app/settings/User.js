@@ -26,9 +26,10 @@ import {
 } from 'redux/actions';
 import TodoListItem from 'components/applications/TodoListItem';
 import AddNewTodoModal from 'containers/applications/AddNewTodoModal';
-import TodoApplicationMenu from 'containers/applications/TodoApplicationMenu';
+// import TodoApplicationMenu from 'containers/applications/TodoApplicationMenu';
 import { deleteAllUsers, getAllUsers } from 'api';
 import UpdateTodoModal from 'containers/applications/UpdateTodoModal';
+import { NotificationManager } from 'components/common/react-notifications';
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -42,14 +43,14 @@ const getIndex = (value, arr, prop) => {
 const TodoApp = ({
   match,
   intl,
-  searchKeyword,
+  // searchKeyword,
   loading,
   orderColumn,
-  orderColumns,
+  // orderColumns,
   selectedItems,
   getTodoListAction,
-  getTodoListWithOrderAction,
-  getTodoListSearchAction,
+  // getTodoListWithOrderAction,
+  // getTodoListSearchAction,
   selectedTodoItemsChangeAction,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -67,7 +68,16 @@ const TodoApp = ({
     const res = await getAllUsers();
     if (res?.data) {
       setUsers(res.data);
-      await loadUsers();
+     
+    } else {
+      NotificationManager.warning(
+        "Unable to Fetch User's Data",
+        "Error!",
+        3000,
+        null,
+        null,
+        ''
+      )
     }
   };
 
@@ -87,6 +97,23 @@ const TodoApp = ({
     await loadUsers();
   };
 
+  const orderBy = [
+    { value: 'name', label: 'Name' },
+    { value: 'roles', label: 'Role' },
+    { value: 'agencyId', label: 'Agency' },
+  ];  
+
+  const handleSort = async (value) => {
+    setUsers(
+      [].concat(users)?.sort((a, b) => {
+        if (a[value] < b[value]) return -1;
+        if (a[value] > b[value]) return 1;
+        return 0;
+      })
+    );
+  };
+
+
   useEffect(() => {
     document.body.classList.add('right-menu');
     getTodoListAction();
@@ -100,7 +127,7 @@ const TodoApp = ({
     if (lastChecked == null) {
       setLastChecked(gotItem.id);
     }
-console.log("main got item hu", gotItem)
+// console.log("main got item hu", gotItem)
 
 
     let selectedList = Object.assign([], selectedItems);
@@ -110,8 +137,8 @@ console.log("main got item hu", gotItem)
       selectedList.push(gotItem.id);
     }
     selectedTodoItemsChangeAction(selectedList);
-    console.log(selectedList);
-    console.log(selectedItems);
+    // console.log(selectedList);
+    // console.log(selectedItems);
     setUpdate(gotItem);
    
 
@@ -126,7 +153,7 @@ console.log("main got item hu", gotItem)
         })
       );
      
-     console.log(update)
+    //  console.log(update)
       selectedList = Array.from(new Set(selectedList));
       selectedTodoItemsChangeAction(selectedList);
     }
@@ -141,13 +168,30 @@ console.log("main got item hu", gotItem)
       }
     }
   };
+  const [search, setSearch] = useState('');
+  const [searchResult, setSearchResult] = useState([]);
   
+  const handleSearch = async (value) => {
+    setSearch(value);
+    if (value !== '') {
+      const arr = users?.filter(
+        (itm) =>
+          itm?.name?.toLowerCase()?.includes(value?.toLowerCase()) ||
+          itm?.roles?.toLowerCase()?.includes(value?.toLowerCase())
+      );
+      setSearchResult(arr || []);
+    } else {
+      setSearchResult([]);
+    }
+  };
 
   const initialState = {
     id: '',
-    uname: '',
+    uuserName: '',
+    ufirstName: '',
+    ulastName: '',
     uemail: '',
-    eroles: {},
+    eroles: '',
     edescription: '',
     estatus: '',
   };
@@ -155,12 +199,14 @@ console.log("main got item hu", gotItem)
 
 const ref = useRef(null);
 const updateTodo = (currentUser)=>{
-  console.log("current user",currentUser);
+  // console.log("current user",currentUser);
   ref.current.onClick();
   setIsUpdate(
     {
       id: currentUser.id,
-      uname: currentUser.name,
+      uuserName: currentUser.userName,
+      ufirstName: currentUser.firstName,
+      ulastName: currentUser.lastName,
       uemail: currentUser.email,
       eroles: currentUser.roles,
       edescription: currentUser.description,
@@ -168,12 +214,13 @@ const updateTodo = (currentUser)=>{
     }
 
   );
-  console.log("update hu updatetodo wala",currentUser)
+  // console.log("update hu updatetodo wala",currentUser)
 
   
 }
   const { messages } = intl;
 // console.log(gotItem)
+
   return (
     <>
       <Row className="app-row survey-app">
@@ -261,11 +308,11 @@ const updateTodo = (currentUser)=>{
                     {orderColumn ? orderColumn.label : ''}
                   </DropdownToggle>
                   <DropdownMenu>
-                    {orderColumns.map((o, index) => {
+                  {orderBy.map((o, index) => {
                       return (
                         <DropdownItem
                           key={index}
-                          onClick={() => getTodoListWithOrderAction(o.column)}
+                          onClick={() => handleSort(o.value)}
                         >
                           {o.label}
                         </DropdownItem>
@@ -279,11 +326,9 @@ const updateTodo = (currentUser)=>{
                     name="keyword"
                     id="search"
                     placeholder={messages['menu.search']}
-                    defaultValue={searchKeyword}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        getTodoListSearchAction(e.target.value);
-                      }
+                    defaultValue={search}
+                    onChange={(e) => {
+                      handleSearch(e.target.value);
                     }}
                   />
                 </div>
@@ -293,7 +338,7 @@ const updateTodo = (currentUser)=>{
           <Separator className="mb-5" />
           <Row>
             {loading ? (
-              users.map((item, index) => (
+             (search !== '' ? searchResult : users).map((item, index) => (
                 <TodoListItem
                   key={`todo_item_${index}`}
                   item={item}
@@ -316,7 +361,7 @@ const updateTodo = (currentUser)=>{
       >
         update
       </Button>
-      {loading && <TodoApplicationMenu />}
+      {/* {loading && <TodoApplicationMenu />} */}
       <AddNewTodoModal
         toggleModal={() => setModalOpen(!modalOpen)}
         modalOpen={modalOpen}

@@ -13,7 +13,7 @@ import {
 
 const INIT_STATE = {
   allTodoItems: null,
-  todoItems: null,
+  users: null,
   error: '',
   filter: null,
   searchKeyword: '',
@@ -21,11 +21,10 @@ const INIT_STATE = {
   loading: false,
   agency: [],
   orderColumns: [
-    { column: 'fullname', label: 'Title' },
-    { column: 'role', label: 'Role' },
+    { column: 'name', label: 'Title' },
+    { column: 'roles', label: 'Role' },
     { column: 'status', label: 'Status' },
-    { column: 'agency', label: 'Agency' },
-  ],
+      ],
   roles: ['Super Admin', 'Admin', 'Employee', 'Manager', 'Sales', 'Marketing'],
   selectedItems: [],
 };
@@ -102,11 +101,11 @@ export default (state = INIT_STATE, action) => {
       // eslint-disable-next-line no-case-declarations
       const searchItems = state.allTodoItems.filter(
         (item) =>
-          item.fullname.toLowerCase().indexOf(keyword) > -1 ||
-          item.description.toLowerCase().indexOf(keyword) > -1 ||
-          item.status.toLowerCase().indexOf(keyword) > -1 ||
-          item.role.toLowerCase().indexOf(keyword) > -1 ||
-          item.agency.toLowerCase().indexOf(keyword) > -1
+          item.name.toLowerCase().indexOf(keyword) > -1 
+          // item.description.toLowerCase().indexOf(keyword) > -1 ||
+          // item.status.toLowerCase().indexOf(keyword) > -1 ||
+          // item.roles.toLowerCase().indexOf(keyword) > -1 ||
+          // item.email.toLowerCase().indexOf(keyword) > -1
       );
       return {
         ...state,
@@ -123,7 +122,7 @@ export default (state = INIT_STATE, action) => {
         ...state,
         loading: true,
         allTodoItems: action.payload,
-        todoItems: action.payload,
+        users: action.payload,
       };
 
     case TODO_ADD_ITEM_ERROR:

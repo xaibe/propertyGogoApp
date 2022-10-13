@@ -12,11 +12,13 @@ import { loginUser } from 'redux/actions';
 
 const validatePassword = (value) => {
   let error;
+  // const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
   if (!value) {
     error = 'Please enter your password';
   } else if (value.length < 4) {
     error = 'Value must be longer than 3 characters';
-  }
+  } 
+
   return error;
 };
 
@@ -114,6 +116,7 @@ const Login = ({ history, loading, error, loginUserAction }) => {
                     </NavLink>
                     <Button
                       color="primary"
+                      type='submit'
                       className={`btn-shadow btn-multiple-state ${
                         loading ? 'show-spinner' : ''
                       }`}

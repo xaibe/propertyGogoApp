@@ -6,7 +6,7 @@ import 'dropzone/dist/min/dropzone.min.css';
 const ReactDOMServer = require('react-dom/server');
 
 const dropzoneComponentConfig = {
-  postUrl: 'https://httpbin.org/post',
+  postUrl: "https://cloudinaryapp.herokuapp.com/upload",
 };
 const dropzoneConfig = {
   thumbnailHeight: 160,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink,useParams , useHistory } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -6,12 +6,16 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { NotificationManager } from 'components/common/react-notifications';
 import axios from 'axios';
+import { PASSWORD_REGEX } from 'helpers/authHelper';
  
 
 const validateNewPassword = (values) => {
   const { newPassword, newPasswordAgain } = values;
   const errors = {};
-  if (newPasswordAgain && newPassword !== newPasswordAgain) {
+  if(!PASSWORD_REGEX.test(newPassword)) {
+    errors.newPassword =  "Password should contain 2 uppercase, 3 lowercase, 2 numbers and 1 special character";
+  }
+   else if (newPasswordAgain && newPassword !== newPasswordAgain) {
     errors.newPasswordAgain = 'Please check your password';
   }
   return errors;
@@ -21,7 +25,7 @@ const validateNewPassword = (values) => {
 const UserPassword = ({
   // history,
   loading,
-  error,
+  // error,
  
 }) => {
   const [newPassword] = useState('');
@@ -29,47 +33,29 @@ const UserPassword = ({
   
   
   const { hash,email } = useParams();
-  console.log("params",hash);
-  console.log("params",email);
+  // console.log("params",hash);
+  // console.log("params",email);
   // return <div style={{ fontSize: "50px" }}>
   //          Now showing post {hash}
   //        </div>;
   
   
-  useEffect(() => {
-    
-    if (error) {
-      NotificationManager.warning(
-        error,
-        'Setting Up Password Error',
-        3000,
-        null,
-        null,
-        ''
-        );
-      } else if (!loading && newPassword === 'success')
-      NotificationManager.success(
-        'Please login with your new password.',
-        'Setting up Password Success',
-        3000,
-        null,
-        null,
-        ''
-        );
-      }, [error, loading, newPassword]);
+  
       
       
       const initialValues = { newPassword, newPasswordAgain };
       const history = useHistory();
       
       const onSetPassword = async (values) => {
-        console.log("values",values)
+        // console.log("values",values)
         if(values.newPassword !== ''){
 
     const res  = await axios.post(`https://app-propertymanagement.herokuapp.com/auth/verify-create-password-email-link/${hash}/${email}`, values)
-  console.log(res)
+  // console.log(res)
   if(res) {
     history.push('/user/login')
+  } else  {
+    NotificationManager.warning( 'Network Issue!',"Error!", 3000, null, null, '');
   }
   }
     

@@ -9,3 +9,7 @@ export const ADD_NEW_USER = '/users/signup/';
 export const GET_ALL_USER = '/users/findAllUsers';
 export const DELETE_ALL_USER = '/users/deleteUser/';
 export const UPDATE_ALL_USER = '/users/updateUser/';
+export const SET_PASSWORD = '/auth/verify-create-password-email-link/';
+export const SET_ADDRESS = '/address/createUserAddress/';
+export const UPDATE_PROFILE_ADDRESS = '/address/updateaddress/';
+export const UPLOAD_IMAGES = '/images/upload';

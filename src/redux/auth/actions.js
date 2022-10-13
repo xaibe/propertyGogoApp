@@ -13,6 +13,9 @@ import {
   RESET_PASSWORD,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_ERROR,
+  SET_PASSWORD_SUCCESS,
+  SET_PASSWORD_ERROR,
+  SET_PASSWORD,
 } from '../actions';
 
 export const loginUser = (user, history) => ({
@@ -51,6 +54,19 @@ export const resetPasswordSuccess = (newPassword) => ({
 });
 export const resetPasswordError = (message) => ({
   type: RESET_PASSWORD_ERROR,
+  payload: { message },
+});
+
+export const setUserPassword = ({  user, newPassword, history }) => ({
+  type: SET_PASSWORD,
+  payload: { user, newPassword, history },
+});
+export const setPasswordSuccess = (newPassword) => ({
+  type: SET_PASSWORD_SUCCESS,
+  payload: newPassword,
+});
+export const setPasswordError = (message) => ({
+  type: SET_PASSWORD_ERROR,
   payload: { message },
 });
 

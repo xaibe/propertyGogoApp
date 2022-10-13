@@ -28,6 +28,7 @@ import {
 // import TodoApplicationMenu from 'containers/applications/TodoApplicationMenu';
 import AgencyListItem from 'components/applications/AgencyListItem';
 import { deleteAllAgenciesApi,  getAllAgenciesApi } from 'api';
+import { NotificationManager } from 'components/common/react-notifications';
 import AgencyModal from './AgencyModal';
 import UpdateAgencyModal from './UpdateAgencyModal';
 
@@ -68,6 +69,16 @@ const [update, setUpdate] = useState([]);
       setAgencies(res.data);
       await loadAgencies();
 
+    }
+    else {
+      NotificationManager.warning(
+        "Unable to Fetch Agency's Data",
+        "Error!",
+        3000,
+        null,
+        null,
+        ''
+      )
     }
    };
 
@@ -164,7 +175,7 @@ const updateAgency = (currentAgency)=>{
   ref.current.onClick();
 
   setAgencyUpdate({
-    id: currentAgency.id,
+    eid: currentAgency.id,
     ename: currentAgency.name, 
     estreet_number: currentAgency.Address.street_number,
     ehouse_number: currentAgency.Address.house_number,

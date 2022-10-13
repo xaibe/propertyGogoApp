@@ -16,14 +16,14 @@ const TodoListItem = ({ item, handleCheckChange, isSelected }) => {
               id={`toggler${item.id}`}
               className="list-item-heading mb-0 truncate w-40 w-xs-100  mb-1 mt-1"
             >
-              <i
+              {/* <i
                 className={`${
                   item.status === 'COMPLETED'
                     ? 'simple-icon-check heading-icon'
                     : 'simple-icon-refresh heading-icon'
                 }`}
-              />
-              <span className="align-middle d-inline-block">{item.name}</span>
+              /> */}
+              <span className="align-middle d-inline-block">{item.firstName} {item.lastName}</span>
             <p className="mx-4 text-muted text-small d-inline-block w-15 w-xs-100">
               {item.email}
             </p>

@@ -41,9 +41,9 @@ export const getTodoListSearch = (keyword) => ({
   payload: keyword,
 });
 
-export const addTodoItem = (item) => ({
+export const addTodoItem = (item,id) => ({
   type: TODO_ADD_ITEM,
-  payload: item,
+  payload:{ item, id },
 });
 
 export const addTodoItemSuccess = (items) => ({

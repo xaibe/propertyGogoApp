@@ -14,6 +14,9 @@ import {
   RESET_PASSWORD,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_ERROR,
+  SET_PASSWORD_ERROR,
+  SET_PASSWORD,
+  SET_PASSWORD_SUCCESS,
 } from '../actions';
 
 const INIT_STATE = {
@@ -75,6 +78,22 @@ export default (state = INIT_STATE, action) => {
         loading: false,
         newPassword: '',
         resetPasswordCode: '',
+        error: action.payload.message,
+      };
+    case SET_PASSWORD:
+      return { ...state, loading: true, error: '' };
+    case SET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        newPassword: action.payload,
+        error: '',
+      };
+    case SET_PASSWORD_ERROR:
+      return {
+        ...state,
+        loading: false,
+        newPassword: '',
         error: action.payload.message,
       };
     case REGISTER_USER:

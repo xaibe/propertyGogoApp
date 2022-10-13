@@ -16,6 +16,7 @@ import IntlMessages from 'helpers/IntlMessages';
 
 import { addTodoItem } from 'redux/actions';
 import {  updateAllUsers,  } from 'api';
+import { NotificationManager } from 'components/common/react-notifications';
 
 
 
@@ -54,7 +55,9 @@ setIsUpdate,
     console.log(isUpdate)
    const obj = {   
       "email": isUpdate.uemail,
-      "name": isUpdate.uname,
+      "firstName": isUpdate.ufirstName,
+      "userName": isUpdate.uuserName,
+      "lastName": isUpdate.ulastName,
       "description": isUpdate.edescription,
       "status": isUpdate.estatus,
       "roles": isUpdate.eroles.value
@@ -63,10 +66,10 @@ setIsUpdate,
    
    const res = await updateAllUsers(obj, isUpdate.id);
    if (res?.data) {
-   
+    NotificationManager.success('User Updated Successfully!',"Success!",  3000, null, null, '');
     toggleModal();
   } else {
-    alert('Error');
+    NotificationManager.warning('User Alreacy Exist!',"Error!",  3000, null, null, '');
   }
   };
 
@@ -82,15 +85,39 @@ setIsUpdate,
       </ModalHeader>
       <ModalBody>
         <Label className="mt-4">
-          <IntlMessages id="todo.fullname" />
+          <IntlMessages id="todo.firstname" />
         </Label>
         <Input
         required
           type="text"
           name='uname'
-          value={isUpdate.uname}
+          value={isUpdate.ufirstName}
           onChange={(event) =>
-            setIsUpdate({ ...isUpdate, uname: event.target.value })
+            setIsUpdate({ ...isUpdate, ufirstName: event.target.value })
+          }
+        />
+        <Label className="mt-4">
+          <IntlMessages id="todo.lastname" />
+        </Label>
+        <Input
+        required
+          type="text"
+          name='uname'
+          value={isUpdate.ulastName}
+          onChange={(event) =>
+            setIsUpdate({ ...isUpdate, ulastName: event.target.value })
+          }
+        />
+        <Label className="mt-4">
+          <IntlMessages id="todo.username" />
+        </Label>
+        <Input
+        required
+          type="text"
+          name='uname'
+          value={isUpdate.uuserName}
+          onChange={(event) =>
+            setIsUpdate({ ...isUpdate, uuserName: event.target.value })
           }
         />
         <Label className="mt-4">
@@ -99,6 +126,7 @@ setIsUpdate,
         <Input
           type="email"
           required
+          disabled
           name='uemail'
           value={isUpdate.uemail}
           onChange={(event) =>

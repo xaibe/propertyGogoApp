@@ -1,12 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { connect } from 'react-redux';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { forgotPassword } from 'redux/actions';
 import { NotificationManager } from 'components/common/react-notifications';
+import axios from 'axios';
+import { PASSWORD_REGEX } from 'helpers/authHelper';
+
+const validatePassword = (value) => {
+  let error;
+  // const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+  if(!PASSWORD_REGEX.test(value)) {
+    error =  "Password should contain 2 uppercase, 3 lowercase, 2 numbers and 1 special character";
+  }
+  else if (!value) {
+    error = 'Please enter your password';
+  } else if (value.length < 4) {
+    error = 'Value must be longer than 3 characters';
+  } 
+
+  return error;
+};
+
 
 const validateEmail = (value) => {
   let error;
@@ -19,44 +37,46 @@ const validateEmail = (value) => {
 };
 
 const ForgotPassword = ({
-  history,
-  forgotUserMail,
   loading,
-  error,
-  forgotPasswordAction,
+  // forgotPasswordAction,
 }) => {
-  const [email] = useState('demo@coloredstrategies.com');
-
-  const onForgotPassword = (values) => {
+  const [email] = useState('');
+  const [password] = useState('');
+  const history = useHistory();
+  const onForgotPassword = async (values) => {
     if (!loading) {
-      if (values.email !== '') {
-        forgotPasswordAction(values, history);
+      if (values.email !== '' && values.password !== '') {
+        console.log(values)
+       const res = await axios.post("https://app-propertymanagement.herokuapp.com/auth/temporaryForgetPassword", values, history);
+       console.log("response data=",res.data);
+
+       if(res?.data){
+         NotificationManager.success(
+          "Password Updated Successfully",
+          "Success",
+          null,
+          null,
+          ''
+        );
+        history.push('/user/login')
+     
+       } else {
+        NotificationManager.warning(
+          "Network Issues",
+          "Error",
+          3000,
+          null,
+          null,
+          ''
+        );
+       }
       }
     }
   };
 
-  useEffect(() => {
-    if (error) {
-      NotificationManager.warning(
-        error,
-        'Forgot Password Error',
-        3000,
-        null,
-        null,
-        ''
-      );
-    } else if (!loading && forgotUserMail === 'success')
-      NotificationManager.success(
-        'Please check your email.',
-        'Forgot Password Success',
-        3000,
-        null,
-        null,
-        ''
-      );
-  }, [error, forgotUserMail, loading]);
+ 
 
-  const initialValues = { email };
+  const initialValues = { email , password };
 
   return (
     <Row className="h-100">
@@ -98,7 +118,24 @@ const ForgotPassword = ({
                         {errors.email}
                       </div>
                     )}
+                    
                   </FormGroup>
+                  <FormGroup className="form-group has-float-label">
+                    <Label>
+                      <IntlMessages id="user.password" />
+                    </Label>
+                    <Field
+                      className="form-control"
+                      type="password"
+                      name="password"
+                      validate={validatePassword}
+                    />
+                    {errors.password && touched.password && (
+                      <div className="invalid-feedback d-block">
+                        {errors.password}
+                      </div>
+                    )}
+                    </FormGroup>
 
                   <div className="d-flex justify-content-between align-items-center">
                     <NavLink to="/user/forgot-password">

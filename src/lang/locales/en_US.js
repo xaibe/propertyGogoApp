@@ -315,6 +315,10 @@ module.exports = {
   'todo.add-new-title': 'Add New User',
   'todo.update-title': 'Update User',
   'todo.fullname': 'Full Name',
+  'todo.username': 'User Name',
+  'todo.firstname': 'First Name',
+  'todo.lastname': 'Last Name',
+  'todo.displayname': 'Display Name',
   'todo.email': 'E-mail',
   'todo.role': 'Role',
   'todo.agency': 'Agency',
@@ -428,7 +432,10 @@ module.exports = {
   'cards.image-overlay-card': 'Image Overlay Card',
   'cards.image-card-list': 'Image Card List',
   'cards.tab-card': 'Tab Card',
-  'cards.user-card': 'User Card',
+  'cards.user-card': 'User Info',
+  'cards.user-contact': 'Contact Details',
+  'cards.user-profile': 'Profile Pricture',
+  'cards.user-address': 'Address Details',
 
   /* 07.05.Carousel */
   'carousel.basic': 'Carousel Basic',

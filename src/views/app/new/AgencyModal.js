@@ -10,6 +10,7 @@ import {
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { addNewAgencyApi } from 'api';
+import { NotificationManager } from 'components/common/react-notifications';
 
 const initialState = {
   name: '',
@@ -46,7 +47,7 @@ const AgencyModal = ({ modalOpen = true, toggleModal }) => {
     console.log("res",res);
     setLoading(false);
     if (res?.data) {
-      
+      NotificationManager.success('Agency Created Successfully!',"Success!",  3000, null, null, '');
       setState({
         name: '',
         street_number: '',
@@ -60,7 +61,7 @@ const AgencyModal = ({ modalOpen = true, toggleModal }) => {
       
     } else {
      
-      alert('Error');
+      NotificationManager.success('Agency Already Exist!',"Error!",  3000, null, null, '');
     }
   }catch(error){
     console.log("error in agency.js",error);

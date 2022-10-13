@@ -5,7 +5,16 @@ import IntlMessages from 'helpers/IntlMessages';
 // import Breadcrumb from 'reactstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 
+import UserCardExamples from 'containers/ui/UserCardExamples';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { getCurrentUser } from 'helpers/Utils';
+
 const Myprofile = ({ match }) => {
+  
+ 
+ const user = getCurrentUser();
+
   return (
     <Row className="app-row survey-app">
         <Colxx xxs="12">
@@ -24,7 +33,16 @@ const Myprofile = ({ match }) => {
           <Separator className="mb-5" />
 
         </Colxx>
+        <UserCardExamples user = {user}/>
       </Row>
   )
 }
-export default Myprofile
+const mapStateToProps = ({ authUser }) => {
+
+  return {
+    authUser
+  };
+};
+export default injectIntl(
+  connect(mapStateToProps)(Myprofile)
+);

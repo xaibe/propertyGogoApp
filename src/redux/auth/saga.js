@@ -2,13 +2,14 @@ import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { auth } from 'helpers/Firebase';
 import { adminRoot, currentUser } from 'constants/defaultValues';
 import { getCurrentUser, setCurrentUser } from 'helpers/Utils';
-import { loginApi, registerApi } from 'api';
+import { loginApi, registerApi, setPassword } from 'api';
 import {
   LOGIN_USER,
   REGISTER_USER,
   LOGOUT_USER,
   FORGOT_PASSWORD,
   RESET_PASSWORD,
+  SET_PASSWORD,
 } from '../actions';
 
 import {
@@ -20,7 +21,10 @@ import {
   forgotPasswordError,
   resetPasswordSuccess,
   resetPasswordError,
+  setPasswordError,
+  setPasswordSuccess
 } from './actions';
+// import { useParams } from 'react-router-dom';
 
 export function* watchLoginUser() {
   // eslint-disable-next-line no-use-before-define
@@ -38,13 +42,15 @@ function* loginWithEmailPassword({ payload }) {
   const { history } = payload;
   try {
     const res = yield call(loginApi, email, password);
+    console.log("response",res);
     if (res?.data?.access_token) {
+      
       setCurrentUser(res.data.access_token);
       const user = getCurrentUser(res.data.access_token);
       yield put(loginUserSuccess(user));
       history.push('/');
     } else {
-      yield put(loginUserError(res?.message));
+      yield put(loginUserError("email or password is invalid"));
     }
   } catch (error) {
     yield put(loginUserError(error));
@@ -72,6 +78,31 @@ function* registerWithEmailPassword({ payload }) {
     }
   } catch (error) {
     yield put(registerUserError(error));
+  }
+}
+
+export function* watchSetPassword() {
+  // eslint-disable-next-line no-use-before-define
+  yield takeEvery(SET_PASSWORD, setPasswordWithEmail);
+}
+
+
+function* setPasswordWithEmail({ payload }) {
+  const { newPassword } = payload.user;
+  const { history } = payload;
+  
+  try {
+    const res = yield call(setPassword, newPassword);
+    if (!res.message) {
+      const item = { uid: res.user.uid, ...currentUser };
+      setCurrentUser(item);
+      yield put(setPasswordSuccess(item));
+      history.push('/auth/login');
+    } else {
+      yield put(setPasswordError(res.message));
+    }
+  } catch (error) {
+    yield put(setPasswordError(error));
   }
 }
 
