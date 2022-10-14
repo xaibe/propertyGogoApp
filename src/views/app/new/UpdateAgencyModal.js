@@ -47,7 +47,8 @@ const UpdateAgencyModal = ({
         "country": agencyUpdate.ecountry
       
     }
-    const res = await updateAllAgenciesApi(obj, agencyUpdate.id)
+  
+    const res = await updateAllAgenciesApi(obj, agencyUpdate.eid)
     if(res?.data){
       NotificationManager.success('Agency Updated Successfully!',"Success!",  3000, null, null, '');
       toggleModal();

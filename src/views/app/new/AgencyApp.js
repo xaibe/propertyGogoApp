@@ -67,8 +67,6 @@ const [update, setUpdate] = useState([]);
     const res = await getAllAgenciesApi();
     if (res?.data) {
       setAgencies(res.data);
-      await loadAgencies();
-
     }
     else {
       NotificationManager.warning(
@@ -87,13 +85,23 @@ const [update, setUpdate] = useState([]);
    useEffect(() => {
     loadAgencies()
     // eslint-disable-next-line
- }, [agencies]);
+ }, []);
 
 
  const deleteAgencies = async()=>{
     if(selectedItems.length===1){
-       await deleteAllAgenciesApi(selectedItems);
-      
+     const res =  await deleteAllAgenciesApi(selectedItems);
+     console.log("delete", res)
+      if(res.status==='500'){
+        NotificationManager.warning(
+          "Internal Server Error",
+          "Error!",
+          3000,
+          null,
+          null,
+          ''
+        )
+      }
     
     }
     else{
@@ -103,7 +111,7 @@ const [update, setUpdate] = useState([]);
       });
     
     }
-    await loadAgencies();
+     loadAgencies();
   }
  
 

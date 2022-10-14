@@ -75,7 +75,7 @@ const AddNewTodoModal = ({
 
     // console.log("state",state);
     const res = await addNewUser(obj, state.agency.value);
-    //  console.log(res)
+     console.log("user",res)
     if (res?.data) {
       NotificationManager.success(
         'User Created Successfully!',

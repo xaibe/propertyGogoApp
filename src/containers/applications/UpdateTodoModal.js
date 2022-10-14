@@ -184,43 +184,20 @@ setIsUpdate,
         <Label className="mt-4">
           <IntlMessages id="todo.status" />
         </Label>
-        <CustomInput
-          type="radio"
-          id="exCustomRadio"
-          name="estatus"
-          label="Active"
-          checked={isUpdate.estatus === 'Active'}
-          onChange={(event) =>
-            setIsUpdate({
-              ...isUpdate,
-              status: event.target.value === 'on' ? 'Active' : '',
-            })
-          }
-        />
-        <CustomInput
-          type="radio"
-          id="exCustomRadio2"
-          name="estatus"
-          label="In-Progress"
-          checked={isUpdate.estatus === 'In-Progress'}
-          onChange={(event) =>
-            setIsUpdate({
-              ...isUpdate,
-              status: event.target.value === 'on' ? 'In-Progress' : '',
-            })}
-        />
-        <CustomInput
-          type="radio"
-          id="exCustomRadio4"
-          name="estatus"
-          label="Archieved"
-          checked={isUpdate.estatus === 'Archieved'}
-          onChange={(event) =>
-            setIsUpdate({
-              ...isUpdate,
-              status: event.target.value === 'on' ? 'Archieved' : '',
-            })}
-        />
+        {['Active', 'In-Progress', 'Archieved'].map((itm, idx) => (
+          <CustomInput
+            key={idx?.toString()}
+            type="radio"
+            label={itm}
+            checked={isUpdate.status === itm}
+            onClick={() => {
+              setIsUpdate({ ...isUpdate, status: itm });
+            }}
+            onChange={() => {
+              setIsUpdate({ ...isUpdate, status: itm });
+            }}
+          />
+        ))}
       </ModalBody>
       <ModalFooter>
         <Button ref={refClose} color="secondary" outline onClick={toggleModal}>

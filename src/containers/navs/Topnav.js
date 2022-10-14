@@ -111,7 +111,7 @@ const TopNav = ({
   // };
 // console.log("authUser", getCurrentUser());
 const user = getCurrentUser(); 
-console.log("main use", user)
+// console.log("main use", user)
 const [image] = useState(user);
   const handleDocumentClickSearch = (e) => {
     let isSearchClick = false;

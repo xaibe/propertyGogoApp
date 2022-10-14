@@ -71,6 +71,7 @@ const handleUserUpdate = (updateUser)=>{
       "roles": userState.eroles.value,
     };
     const res = await updateAllUsers(obj, userState.uid);
+    console.log("res",res)
     if (res?.data) {
       NotificationManager.success(
         'User Info Updated Successfully! Please relogin to see changes',
