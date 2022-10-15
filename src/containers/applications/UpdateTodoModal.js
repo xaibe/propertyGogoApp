@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   CustomInput,
@@ -15,62 +15,97 @@ import CustomSelectInput from 'components/common/CustomSelectInput';
 import IntlMessages from 'helpers/IntlMessages';
 
 import { addTodoItem } from 'redux/actions';
-import {  updateAllUsers,  } from 'api';
+import { updateAllUsers } from 'api';
 import { NotificationManager } from 'components/common/react-notifications';
-
-
 
 const UpdateTodoModal = ({
   emodalOpen,
   toggleModal,
-//   agency,
-isUpdate,
-setIsUpdate,
+  //   agency,
+  isUpdate,
+  setIsUpdate,
   roles,
+  setUpdate,
 }) => {
-  
-//   const [eagencies, seteAgencies] = useState([]);
-  
+  const [isUpdateErrors, setIsUpdateErrors] = useState({});
+  useEffect(() => {
+    if (Object.keys(isUpdateErrors).length === 0) {
+      console.log(isUpdate);
+    }
+  }, [isUpdateErrors]);
 
-//   const loadAgencies = async () => {
-//     const res = await getAllAgenciesApi()
-//     if (res?.data) {
-//       seteAgencies(res.data);
-//       console.log(res.data);
-//     }
-//    };
-  
-//   //  const onChange = (e)=>{
-//   //   setIsUpdate({...isUpdate, [e.target.name]: e.target.value})
-//   //  }
+  const validate = () => {
+    const errors = {};
 
-//    useEffect(() => {
-//     loadAgencies();
-//  }, []);
+    if (!isUpdate.ufirstName) {
+      errors.firstName = 'please, enter your first name';
+    }
+    if (!isUpdate.ulastName) {
+      errors.lastName = 'please, enter your last name';
+    }
+    if (!isUpdate.uuserName) {
+      errors.userName = 'please, enter your username';
+    }
+    if (!isUpdate.edescription) {
+      errors.description = 'please, enter your description';
+    }
+    if (!isUpdate.erole) {
+      errors.role = 'please, select your role';
+    }
 
-  const refClose = useRef(null)
+    return errors;
+  };
+
+  const refClose = useRef(null);
 
   const addUser = async () => {
+    setIsUpdateErrors(validate(isUpdate));
     refClose.current.onClick();
-    console.log(isUpdate)
-   const obj = {   
-      "email": isUpdate.uemail,
-      "firstName": isUpdate.ufirstName,
-      "userName": isUpdate.uuserName,
-      "lastName": isUpdate.ulastName,
-      "description": isUpdate.edescription,
-      "status": isUpdate.estatus,
-      "roles": isUpdate.eroles.value
+
+    if (isUpdate.ufirstName === 0) {
+      NotificationManager.warning(
+        'PLease Fill all required data',
+        'Error!',
+        3000,
+        null,
+        null,
+        ''
+      );
+    } else {
+      const obj = {
+        email: isUpdate.uemail,
+        firstName: isUpdate.ufirstName,
+        userName: isUpdate.uuserName,
+        lastName: isUpdate.ulastName,
+        description: isUpdate.edescription,
+        status: isUpdate.estatus,
+        roles: isUpdate.eroles.value,
+      };
+
+      const res = await updateAllUsers(obj, isUpdate.id);
+      if (res?.data) {
+        NotificationManager.success(
+          'User Updated Successfully!',
+          'Success!',
+          3000,
+          null,
+          null,
+          ''
+        );
+        setUpdate('');
+        toggleModal();
+      } else {
+        NotificationManager.warning(
+          'User Alreacy Exist!',
+          'Error!',
+          3000,
+          null,
+          null,
+          ''
+        );
+        setUpdate('');
+      }
     }
-    
-   
-   const res = await updateAllUsers(obj, isUpdate.id);
-   if (res?.data) {
-    NotificationManager.success('User Updated Successfully!',"Success!",  3000, null, null, '');
-    toggleModal();
-  } else {
-    NotificationManager.warning('User Alreacy Exist!',"Error!",  3000, null, null, '');
-  }
   };
 
   return (
@@ -88,38 +123,47 @@ setIsUpdate,
           <IntlMessages id="todo.firstname" />
         </Label>
         <Input
-        required
+          required
           type="text"
-          name='uname'
+          name="uname"
           value={isUpdate.ufirstName}
           onChange={(event) =>
             setIsUpdate({ ...isUpdate, ufirstName: event.target.value })
           }
         />
+        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
+          {isUpdateErrors.ufirstName}
+        </p>
         <Label className="mt-4">
           <IntlMessages id="todo.lastname" />
         </Label>
         <Input
-        required
+          required
           type="text"
-          name='uname'
+          name="uname"
           value={isUpdate.ulastName}
           onChange={(event) =>
             setIsUpdate({ ...isUpdate, ulastName: event.target.value })
           }
         />
+        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
+          {isUpdateErrors.ulastName}
+        </p>
         <Label className="mt-4">
           <IntlMessages id="todo.username" />
         </Label>
         <Input
-        required
+          required
           type="text"
-          name='uname'
+          name="uname"
           value={isUpdate.uuserName}
           onChange={(event) =>
             setIsUpdate({ ...isUpdate, uuserName: event.target.value })
           }
         />
+        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
+          {isUpdateErrors.uuserName}
+        </p>
         <Label className="mt-4">
           <IntlMessages id="todo.email" />
         </Label>
@@ -127,7 +171,7 @@ setIsUpdate,
           type="email"
           required
           disabled
-          name='uemail'
+          name="uemail"
           value={isUpdate.uemail}
           onChange={(event) =>
             setIsUpdate({ ...isUpdate, uemail: event.target.value })
@@ -139,13 +183,15 @@ setIsUpdate,
         </Label>
         <Input
           type="textarea"
-          name='edescription'
+          name="edescription"
           value={isUpdate.edescription}
           onChange={(event) =>
             setIsUpdate({ ...isUpdate, edescription: event.target.value })
           }
         />
-
+        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
+          {isUpdateErrors.edescription}
+        </p>
         <Label className="mt-4">
           <IntlMessages id="todo.role" />
         </Label>
@@ -160,6 +206,9 @@ setIsUpdate,
           value={isUpdate.eroles}
           onChange={(val) => setIsUpdate({ ...isUpdate, eroles: val })}
         />
+        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
+          {isUpdateErrors.eroles}
+        </p>
         {/* <Label className="mt-4">
           <IntlMessages id="todo.agency" />
         </Label>

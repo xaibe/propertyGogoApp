@@ -85,14 +85,25 @@ const [update, setUpdate] = useState([]);
    useEffect(() => {
     loadAgencies()
     // eslint-disable-next-line
- }, []);
+ }, [agencies]);
 
 
  const deleteAgencies = async()=>{
     if(selectedItems.length===1){
      const res =  await deleteAllAgenciesApi(selectedItems);
      console.log("delete", res)
-      if(res.status==='500'){
+     if(res.data){
+      NotificationManager.success(
+        "Agency Deleted Successfully!",
+        "Success!",
+        3000,
+        null,
+        null,
+        ''
+      )
+      setUpdate('');
+     }
+      else if(res.status==='500'){
         NotificationManager.warning(
           "Internal Server Error",
           "Error!",
@@ -102,6 +113,7 @@ const [update, setUpdate] = useState([]);
           ''
         )
       }
+      setUpdate('');
     
     }
     else{
@@ -109,7 +121,7 @@ const [update, setUpdate] = useState([]);
       await selectedItems.forEach( async (item) => {
         await deleteAllAgenciesApi(item);
       });
-    
+      setUpdate('');
     }
      loadAgencies();
   }
@@ -344,6 +356,7 @@ const updateAgency = (currentAgency)=>{
         update
       </Button>
       <UpdateAgencyModal
+      setUpdate={setUpdate}
       selectedItems = {selectedItems}
       toggleModal={() => setEModalOpen(!emodalOpen)}
         emodalOpen={emodalOpen}

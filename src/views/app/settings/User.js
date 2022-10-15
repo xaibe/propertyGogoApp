@@ -84,17 +84,38 @@ const TodoApp = ({
   useEffect(() => {
     loadUsers();
     // eslint-disable-next-line
-  }, []);
+  }, [users]);
 
   const deleteUsers = async () => {
     if (selectedItems.length === 1) {
-      await deleteAllUsers(selectedItems);
-    } else {
+      const res = await deleteAllUsers(selectedItems);
+      if(res.data){
+        NotificationManager.success(
+          "User Deleted Successfully!",
+          "Success!",
+          3000,
+          null,
+          null,
+          ''
+        )
+      } else if(res.status==='500'){
+        NotificationManager.warning(
+          "Internal Server Error",
+          "Error!",
+          3000,
+          null,
+          null,
+          ''
+        )
+      }
+    }  else {
       await selectedItems.forEach(async (item) => {
-        await deleteAllUsers(item);
-      });
-    }
-    await loadUsers();
+        await deleteAllUsers(item)
+      } );
+      
+    } 
+   
+    loadUsers();
   };
 
   const orderBy = [
@@ -374,6 +395,7 @@ const updateTodo = (currentUser)=>{
         emodalOpen={emodalOpen}
         isUpdate={isUpdate}
         setIsUpdate={setIsUpdate}
+        setUpdate={setUpdate}
       />
     </>
   );

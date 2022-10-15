@@ -39,7 +39,40 @@ const AddNewTodoModal = ({
 }) => {
   const [state, setState] = useState(initialState);
   const [agencies, setAgencies] = useState([]);
-
+  const [stateErrors, setStateErrors] = useState({});
+  useEffect(()=>{
+    if(Object.keys(stateErrors).length === 0 ){
+      console.log(state);
+    }
+},[stateErrors])
+  
+  
+  const validate = ()=>{
+    const errors = {};
+    
+    if(!state.firstName){
+      errors.firstName = "please, enter your first name"
+    }
+    if(!state.lastName){
+      errors.lastName = "please, enter your last name"
+    }
+    if(!state.userName){
+      errors.userName = "please, enter your username"
+    }
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(state.email)) {
+      errors.email = 'Invalid email address';
+    }
+    if(!state.description){
+      errors.description = "please, enter your description"
+    }
+    if(!state.role){
+      errors.role = "please, select your role"
+    }
+    if(!state.agency){
+      errors.agency = "please, select your agency"
+    }
+    return errors;
+  }
   const loadAgencies = async () => {
     const res = await getAllAgenciesApi();
     if (res?.data) {
@@ -62,21 +95,64 @@ const AddNewTodoModal = ({
   }, []);
 
   const addUser = async () => {
-    const obj = {
-      email: state.email,
-      firstName: state.firstName,
-      lastName: state.lastName,
-      userName: state.userName,
-      description: state.description,
-      status: state.status,
-      roles: state.role.value,
-    };
+    setStateErrors(validate(state));   
     //  console.log(state.agency.value)
 
     // console.log("state",state);
-    const res = await addNewUser(obj, state.agency.value);
-     console.log("user",res)
-    if (res?.data) {
+    if(state.firstName.length === 0){
+      NotificationManager.warning(
+            'PLease Fill all required data',
+            'Error!',
+            3000,
+            null,
+            null,
+            ''
+          );
+      
+    //  if (res?.data) {
+    //   NotificationManager.success(
+    //     'User Created Successfully!',
+    //     'Success!',
+    //     3000,
+    //     null,
+    //     null,
+    //     ''
+    //   );
+    //   toggleModal();
+    //   setState({
+    //     firstName: '',
+    //     lastName: '',
+    //     userName: '',
+    //     email: '',
+    //     role: '',
+    //     agency: '',
+    //     description: '',
+    //     status: '',
+    //   });
+    // } else {
+    //   NotificationManager.warning(
+    //     'This User Already Exist',
+    //     'Error!',
+    //     3000,
+    //     null,
+    //     null,
+    //     ''
+    //   );
+    // }
+  
+} else {
+  const obj = {
+    email: state.email,
+    firstName: state.firstName,
+    lastName: state.lastName,
+    userName: state.userName,
+    description: state.description,
+    status: state.status,
+    roles: state.role.value,
+  };
+  const res = await addNewUser(obj, state.agency.value);
+  console.log("user",res)
+ if (res?.data) {
       NotificationManager.success(
         'User Created Successfully!',
         'Success!',
@@ -96,16 +172,8 @@ const AddNewTodoModal = ({
         description: '',
         status: '',
       });
-    } else {
-      NotificationManager.warning(
-        'This User Already Exist',
-        'Error!',
-        3000,
-        null,
-        null,
-        ''
-      );
     }
+}
   };
 
   return (
@@ -124,11 +192,13 @@ const AddNewTodoModal = ({
         </Label>
         <Input
           type="text"
+          required
           defaultValue={state.firstName}
           onChange={(event) =>
             setState({ ...state, firstName: event.target.value })
           }
         />
+        <p style={{color: "red", textAlign: "center", margin: "0"}}>{stateErrors.firstName}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.lastname" />
         </Label>
@@ -139,6 +209,7 @@ const AddNewTodoModal = ({
             setState({ ...state, lastName: event.target.value })
           }
         />
+        <p style={{color: "red", textAlign: "center", margin: "0"}}>{stateErrors.lastName}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.username" />
         </Label>
@@ -149,6 +220,7 @@ const AddNewTodoModal = ({
             setState({ ...state, userName: event.target.value })
           }
         />
+        <p style={{color: "red", textAlign: "center", margin: "0"}}>{stateErrors.userName}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.email" />
         </Label>
@@ -159,7 +231,7 @@ const AddNewTodoModal = ({
             setState({ ...state, email: event.target.value })
           }
         />
-
+<p style={{color: "red", textAlign: "center", margin: "0"}}>{stateErrors.email}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.description" />
         </Label>
@@ -170,7 +242,7 @@ const AddNewTodoModal = ({
             setState({ ...state, description: event.target.value })
           }
         />
-
+<p style={{color: "red", textAlign: "center", margin: "0"}}>{stateErrors.description}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.role" />
         </Label>
@@ -184,7 +256,7 @@ const AddNewTodoModal = ({
           })}
           value={state.role}
           onChange={(val) => setState({ ...state, role: val })}
-        />
+        /><p style={{color: "red", textAlign: "center", margin: "0"}}>{stateErrors.role}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.agency" />
         </Label>
@@ -204,7 +276,7 @@ const AddNewTodoModal = ({
           value={state.agency}
           onChange={(val) => setState({ ...state, agency: val })}
         />
-
+<p style={{color: "red", textAlign: "center",margin: "0"}}>{stateErrors.agency}</p>
         <Label className="mt-4">
           <IntlMessages id="todo.status" />
         </Label>

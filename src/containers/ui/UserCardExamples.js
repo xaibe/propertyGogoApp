@@ -98,6 +98,7 @@ const handleUserUpdate = (updateUser)=>{
       );
     }
   };
+  console.log("user data",data);
   const [state, setState] = useState({
     id: '',
     firstName: '',
@@ -177,7 +178,7 @@ const handleUserUpdate = (updateUser)=>{
     const res =  uploadImages(imageData);
     if(res){
       NotificationManager.success(
-        'Image Updated Succesfully!',
+        'Image Updated Succesfully!, Please relogin to see changes',
         'Success!',
         3000,
         null,
@@ -1048,8 +1049,7 @@ const handleUserUpdate = (updateUser)=>{
 
                     </>
                   )}
-                  {data.Address === null ||
-                    (data.Address === undefined && (
+                  {data.Address === null && (
                       <>
                         <Button
                           outline
@@ -1071,6 +1071,7 @@ const handleUserUpdate = (updateUser)=>{
                             </Label>
                             <Input
                               type="text"
+                              required
                               defaultValue={addressData.street_number}
                               onChange={(event) =>
                                 setAddressData({
@@ -1085,6 +1086,7 @@ const handleUserUpdate = (updateUser)=>{
                             </Label>
                             <Input
                               type="text"
+                              required
                               defaultValue={addressData.house_number}
                               onChange={(event) =>
                                 setAddressData({
@@ -1099,6 +1101,7 @@ const handleUserUpdate = (updateUser)=>{
                             </Label>
                             <Input
                               type="text"
+                              required
                               defaultValue={addressData.city}
                               onChange={(event) =>
                                 setAddressData({
@@ -1113,6 +1116,7 @@ const handleUserUpdate = (updateUser)=>{
                             </Label>
                             <Input
                               type="text"
+                              required
                               defaultValue={addressData.postal_code}
                               onChange={(event) =>
                                 setAddressData({
@@ -1127,6 +1131,7 @@ const handleUserUpdate = (updateUser)=>{
                             </Label>
                             <Input
                               type="text"
+                              required
                               defaultValue={addressData.co}
                               onChange={(event) =>
                                 setAddressData({
@@ -1141,6 +1146,7 @@ const handleUserUpdate = (updateUser)=>{
                             </Label>
                             <Input
                               type="text"
+                              required
                               defaultValue={addressData.country}
                               onChange={(event) =>
                                 setAddressData({
@@ -1169,7 +1175,7 @@ const handleUserUpdate = (updateUser)=>{
                           </ModalFooter>
                         </Modal>
                       </>
-                    ))}
+                    )}
                 </div>
               </CardBody>
             </Card>
