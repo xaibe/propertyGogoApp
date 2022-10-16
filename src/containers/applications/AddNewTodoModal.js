@@ -99,7 +99,7 @@ const AddNewTodoModal = ({
     //  console.log(state.agency.value)
 
     // console.log("state",state);
-    if(state.firstName.length === 0){
+    if(state.email.length < 5 ){
       NotificationManager.warning(
             'PLease Fill all required data',
             'Error!',

@@ -86,37 +86,7 @@ const TodoApp = ({
     // eslint-disable-next-line
   }, [users]);
 
-  const deleteUsers = async () => {
-    if (selectedItems.length === 1) {
-      const res = await deleteAllUsers(selectedItems);
-      if(res.data){
-        NotificationManager.success(
-          "User Deleted Successfully!",
-          "Success!",
-          3000,
-          null,
-          null,
-          ''
-        )
-      } else if(res.status==='500'){
-        NotificationManager.warning(
-          "Internal Server Error",
-          "Error!",
-          3000,
-          null,
-          null,
-          ''
-        )
-      }
-    }  else {
-      await selectedItems.forEach(async (item) => {
-        await deleteAllUsers(item)
-      } );
-      
-    } 
-   
-    loadUsers();
-  };
+
 
   const orderBy = [
     { value: 'name', label: 'Name' },
@@ -188,6 +158,40 @@ const TodoApp = ({
         selectedTodoItemsChangeAction(users.map((x) => x.id));
       }
     }
+  };
+  const deleteUsers = async () => {
+    if (selectedItems.length === 1) {
+      const res = await deleteAllUsers(selectedItems);
+      if(res.data){
+        NotificationManager.success(
+          "User Deleted Successfully!",
+          "Success!",
+          3000,
+          null,
+          null,
+          ''
+        )
+        selectedTodoItemsChangeAction([])
+      } else if(res.status==='500'){
+        NotificationManager.warning(
+          "Internal Server Error",
+          "Error!",
+          3000,
+          null,
+          null,
+          ''
+        )
+        selectedTodoItemsChangeAction([])
+      }
+    }  else {
+      await selectedItems.forEach(async (item) => {
+        await deleteAllUsers(item);
+        selectedTodoItemsChangeAction([])
+      } );
+      
+    } 
+   
+    loadUsers();
   };
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState([]);
@@ -396,6 +400,7 @@ const updateTodo = (currentUser)=>{
         isUpdate={isUpdate}
         setIsUpdate={setIsUpdate}
         setUpdate={setUpdate}
+        selectedTodoItemsChangeAction={selectedTodoItemsChangeAction}
       />
     </>
   );

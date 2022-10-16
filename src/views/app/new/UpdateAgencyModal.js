@@ -19,7 +19,8 @@ const UpdateAgencyModal = ({
   toggleModal,
   agencyUpdate,
   setAgencyUpdate,
-  setUpdate
+  setUpdate,
+  selectedTodoItemsChangeAction
 }) => {
   // const [ExistingAddress, setExistingAddress] = useState()
   //   // Local State
@@ -64,9 +65,11 @@ const UpdateAgencyModal = ({
         ecountry: '',
       })
       setUpdate('');
+      selectedTodoItemsChangeAction([]);
     } else {
       NotificationManager.warning('Agency Already Exist!',"Error!",  3000, null, null, '');
       setUpdate('');
+      selectedTodoItemsChangeAction([]);
     }
   };
 

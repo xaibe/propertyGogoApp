@@ -88,43 +88,6 @@ const [update, setUpdate] = useState([]);
  }, [agencies]);
 
 
- const deleteAgencies = async()=>{
-    if(selectedItems.length===1){
-     const res =  await deleteAllAgenciesApi(selectedItems);
-     console.log("delete", res)
-     if(res.data){
-      NotificationManager.success(
-        "Agency Deleted Successfully!",
-        "Success!",
-        3000,
-        null,
-        null,
-        ''
-      )
-      setUpdate('');
-     }
-      else if(res.status==='500'){
-        NotificationManager.warning(
-          "Internal Server Error",
-          "Error!",
-          3000,
-          null,
-          null,
-          ''
-        )
-      }
-      setUpdate('');
-    
-    }
-    else{
-      
-      await selectedItems.forEach( async (item) => {
-        await deleteAllAgenciesApi(item);
-      });
-      setUpdate('');
-    }
-     loadAgencies();
-  }
  
 
   useEffect(() => {
@@ -149,7 +112,6 @@ const [update, setUpdate] = useState([]);
     }
     selectedTodoItemsChangeAction(selectedList);
     setUpdate(gotItem)
-    console.log("agency update data", update.Address)
     if (event.shiftKey) {
       let items = agencies;
       const start = getIndex(update.id, items, 'id');
@@ -175,7 +137,47 @@ const [update, setUpdate] = useState([]);
     }
   };
 
-
+  const deleteAgencies = async()=>{
+    if(selectedItems.length===1){
+     const res =  await deleteAllAgenciesApi(selectedItems);
+     console.log("delete", res)
+     if(res.data){
+      NotificationManager.success(
+        "Agency Deleted Successfully!",
+        "Success!",
+        3000,
+        null,
+        null,
+        ''
+      )
+      setUpdate('');
+      selectedTodoItemsChangeAction([])
+     }
+      else if(res.status==='500'){
+        NotificationManager.warning(
+          "Internal Server Error",
+          "Error!",
+          3000,
+          null,
+          null,
+          ''
+        );
+        selectedTodoItemsChangeAction([])
+      }
+      setUpdate('');
+    
+    }
+    else{
+      
+      await selectedItems.forEach( async (item) => {
+        await deleteAllAgenciesApi(item);
+      });
+      setUpdate('');
+      selectedTodoItemsChangeAction([])
+    }
+     loadAgencies();
+  }
+ 
   const initialState = {
     eid: '',
     ename: '',
@@ -362,6 +364,7 @@ const updateAgency = (currentAgency)=>{
         emodalOpen={emodalOpen}
         agencyUpdate={agencyUpdate}
         setAgencyUpdate={setAgencyUpdate}
+        selectedTodoItemsChangeAction={selectedTodoItemsChangeAction}
       />
     </>
   );

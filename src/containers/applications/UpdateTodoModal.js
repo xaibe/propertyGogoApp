@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   CustomInput,
@@ -26,52 +26,41 @@ const UpdateTodoModal = ({
   setIsUpdate,
   roles,
   setUpdate,
+  selectedTodoItemsChangeAction,
 }) => {
-  const [isUpdateErrors, setIsUpdateErrors] = useState({});
-  useEffect(() => {
-    if (Object.keys(isUpdateErrors).length === 0) {
-      console.log(isUpdate);
-    }
-  }, [isUpdateErrors]);
+  // const [isUpdateErrors, setIsUpdateErrors] = useState({});
+  // useEffect(() => {
+  //   if (Object.keys(isUpdateErrors).length === 0) {
+  //     console.log(isUpdate);
+  //   }
+  // }, [isUpdateErrors]);
 
-  const validate = () => {
-    const errors = {};
+  // const validate = () => {
+  //   const errors = {};
 
-    if (!isUpdate.ufirstName) {
-      errors.firstName = 'please, enter your first name';
-    }
-    if (!isUpdate.ulastName) {
-      errors.lastName = 'please, enter your last name';
-    }
-    if (!isUpdate.uuserName) {
-      errors.userName = 'please, enter your username';
-    }
-    if (!isUpdate.edescription) {
-      errors.description = 'please, enter your description';
-    }
-    if (!isUpdate.erole) {
-      errors.role = 'please, select your role';
-    }
+  //   if (!isUpdate.ufirstName) {
+  //     errors.firstName = 'please, enter your first name';
+  //   }
+  //   if (!isUpdate.ulastName) {
+  //     errors.lastName = 'please, enter your last name';
+  //   }
+  //   if (!isUpdate.uuserName) {
+  //     errors.userName = 'please, enter your username';
+  //   }
+  //   if (!isUpdate.edescription) {
+  //     errors.description = 'please, enter your description';
+  //   }
+  //   if (!isUpdate.erole) {
+  //     errors.role = 'please, select your role';
+  //   }
 
-    return errors;
-  };
+  //   return errors;
+  // };
 
   const refClose = useRef(null);
 
   const addUser = async () => {
-    setIsUpdateErrors(validate(isUpdate));
     refClose.current.onClick();
-
-    if (isUpdate.ufirstName === 0) {
-      NotificationManager.warning(
-        'PLease Fill all required data',
-        'Error!',
-        3000,
-        null,
-        null,
-        ''
-      );
-    } else {
       const obj = {
         email: isUpdate.uemail,
         firstName: isUpdate.ufirstName,
@@ -94,6 +83,7 @@ const UpdateTodoModal = ({
         );
         setUpdate('');
         toggleModal();
+        selectedTodoItemsChangeAction([]);
       } else {
         NotificationManager.warning(
           'User Alreacy Exist!',
@@ -104,9 +94,10 @@ const UpdateTodoModal = ({
           ''
         );
         setUpdate('');
+        toggleModal();
+        selectedTodoItemsChangeAction([]);
       }
     }
-  };
 
   return (
     <Modal
@@ -131,9 +122,7 @@ const UpdateTodoModal = ({
             setIsUpdate({ ...isUpdate, ufirstName: event.target.value })
           }
         />
-        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
-          {isUpdateErrors.ufirstName}
-        </p>
+       
         <Label className="mt-4">
           <IntlMessages id="todo.lastname" />
         </Label>
@@ -146,9 +135,7 @@ const UpdateTodoModal = ({
             setIsUpdate({ ...isUpdate, ulastName: event.target.value })
           }
         />
-        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
-          {isUpdateErrors.ulastName}
-        </p>
+        
         <Label className="mt-4">
           <IntlMessages id="todo.username" />
         </Label>
@@ -161,9 +148,7 @@ const UpdateTodoModal = ({
             setIsUpdate({ ...isUpdate, uuserName: event.target.value })
           }
         />
-        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
-          {isUpdateErrors.uuserName}
-        </p>
+        
         <Label className="mt-4">
           <IntlMessages id="todo.email" />
         </Label>
@@ -189,9 +174,7 @@ const UpdateTodoModal = ({
             setIsUpdate({ ...isUpdate, edescription: event.target.value })
           }
         />
-        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
-          {isUpdateErrors.edescription}
-        </p>
+      
         <Label className="mt-4">
           <IntlMessages id="todo.role" />
         </Label>
@@ -206,9 +189,7 @@ const UpdateTodoModal = ({
           value={isUpdate.eroles}
           onChange={(val) => setIsUpdate({ ...isUpdate, eroles: val })}
         />
-        <p style={{ color: 'red', textAlign: 'center', margin: '0' }}>
-          {isUpdateErrors.eroles}
-        </p>
+       
         {/* <Label className="mt-4">
           <IntlMessages id="todo.agency" />
         </Label>
