@@ -37,7 +37,6 @@ const UpdateAgencyModal = ({
   //   };
   const updateAgency = async () => {
     refClose.current.onClick();
-    console.log('main hu updateagecny modal', agencyUpdate);
     const postalCode = parseInt(agencyUpdate.epostal_code, 10)
     const obj = {
       "name": agencyUpdate.ename,

@@ -84,7 +84,7 @@ const TodoApp = ({
   useEffect(() => {
     loadUsers();
     // eslint-disable-next-line
-  }, [users]);
+  }, [modalOpen, update]);
 
 
 
@@ -224,7 +224,16 @@ const TodoApp = ({
 
 const ref = useRef(null);
 const updateTodo = (currentUser)=>{
-  // console.log("current user",currentUser);
+  if(currentUser.length === 0) {
+    NotificationManager.warning(
+      "Please select user to update",
+      "Error!",
+      3000,
+      null,
+      null,
+      ''
+    )
+  } else {
   ref.current.onClick();
   setIsUpdate(
     {
@@ -240,7 +249,7 @@ const updateTodo = (currentUser)=>{
 
   );
   // console.log("update hu updatetodo wala",currentUser)
-
+  }
   
 }
   const { messages } = intl;

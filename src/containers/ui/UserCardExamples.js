@@ -71,7 +71,6 @@ const handleUserUpdate = (updateUser)=>{
       "roles": userState.eroles.value,
     };
     const res = await updateAllUsers(obj, userState.uid);
-    console.log("res",res)
     if (res?.data) {
       NotificationManager.success(
         'User Info Updated Successfully! Please relogin to see changes',
@@ -98,7 +97,6 @@ const handleUserUpdate = (updateUser)=>{
       );
     }
   };
-  console.log("user data",data);
   const [state, setState] = useState({
     id: '',
     firstName: '',
@@ -173,8 +171,6 @@ const handleUserUpdate = (updateUser)=>{
     imageData.append('file', imagesSelected);
     // setLoading(true);
 
-    console.log('this is a imagessletecd', imagesSelected);
-
     const res =  uploadImages(imageData);
     if(res){
       NotificationManager.success(
@@ -199,8 +195,7 @@ const handleUserUpdate = (updateUser)=>{
       );
     }
     const file = res.data;
-
-    console.log("main hu file",file);
+    console.log(file)
   };
   const [addressData, setAddressData] = useState({
     street_number: '',
@@ -212,7 +207,6 @@ const handleUserUpdate = (updateUser)=>{
   });
   const handleAddressSubmit = async () => {
     addressModalClose.current.onClick();
-    console.log('address', addressData);
     try {
       const postal = parseInt(addressData.postal_code, 20);
       const obj = {
@@ -225,7 +219,6 @@ const handleUserUpdate = (updateUser)=>{
       };
 
       const res = await addAddressApi(obj, userId.id);
-      console.log('res', res);
 
       if (res?.data) {
         NotificationManager.success(
@@ -255,7 +248,14 @@ const handleUserUpdate = (updateUser)=>{
         );
       }
     } catch (error) {
-      console.log('error in agency.js', error);
+        NotificationManager.warning(
+        error,
+        'Error',
+        3000,
+        null,
+        null,
+        ''
+      );
     }
   };
 

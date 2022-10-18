@@ -63,31 +63,7 @@ const AgencyApp = ({
 const [update, setUpdate] = useState([]);
   const [agencies, setAgencies] = useState([]);
 
-  const loadAgencies = async () => {
-    const res = await getAllAgenciesApi();
-    if (res?.data) {
-      setAgencies(res.data);
-    }
-    else {
-      NotificationManager.warning(
-        "Unable to Fetch Agency's Data",
-        "Error!",
-        3000,
-        null,
-        null,
-        ''
-      )
-    }
-   };
-
-
-
-   useEffect(() => {
-    loadAgencies()
-    // eslint-disable-next-line
- }, [agencies]);
-
-
+  
  
 
   useEffect(() => {
@@ -137,46 +113,6 @@ const [update, setUpdate] = useState([]);
     }
   };
 
-  const deleteAgencies = async()=>{
-    if(selectedItems.length===1){
-     const res =  await deleteAllAgenciesApi(selectedItems);
-     console.log("delete", res)
-     if(res.data){
-      NotificationManager.success(
-        "Agency Deleted Successfully!",
-        "Success!",
-        3000,
-        null,
-        null,
-        ''
-      )
-      setUpdate('');
-      selectedTodoItemsChangeAction([])
-     }
-      else if(res.status==='500'){
-        NotificationManager.warning(
-          "Internal Server Error",
-          "Error!",
-          3000,
-          null,
-          null,
-          ''
-        );
-        selectedTodoItemsChangeAction([])
-      }
-      setUpdate('');
-    
-    }
-    else{
-      
-      await selectedItems.forEach( async (item) => {
-        await deleteAllAgenciesApi(item);
-      });
-      setUpdate('');
-      selectedTodoItemsChangeAction([])
-    }
-     loadAgencies();
-  }
  
   const initialState = {
     eid: '',
@@ -194,6 +130,16 @@ const [update, setUpdate] = useState([]);
  
 
 const updateAgency = (currentAgency)=>{
+  if(currentAgency.length === 0) {
+    NotificationManager.warning(
+      "Please select agency to update",
+      "Error!",
+      3000,
+      null,
+      null,
+      ''
+    )
+  } else {
   ref.current.onClick();
 
   setAgencyUpdate({
@@ -206,8 +152,8 @@ const updateAgency = (currentAgency)=>{
     eco: currentAgency.Address.co,
     ecountry: currentAgency.Address.country
   });
-  console.log("agency update data", currentAgency)
-
+ 
+  }
   // console.log(selectedItems)
   // document.getElementsByClassName('cell')[selectedItems].click()
 
@@ -215,6 +161,71 @@ const updateAgency = (currentAgency)=>{
  
 // setAgencies(currentAgencies)ag
 }
+const loadAgencies = async () => {
+  const res = await getAllAgenciesApi();
+  if (res?.data) {
+    setAgencies(res.data);
+  }
+
+  else {
+    NotificationManager.warning(
+      "Unable to Fetch Agency's Data",
+      "Error!",
+      3000,
+      null,
+      null,
+      ''
+    )
+  }
+ };
+
+
+
+ useEffect(() => {
+  loadAgencies();
+  // eslint-disable-next-line
+},[modalOpen, update]);
+
+const deleteAgencies = async()=>{
+  if(selectedItems.length===1){
+   const res =  await deleteAllAgenciesApi(selectedItems);
+   if(res.data){
+    NotificationManager.success(
+      "Agency Deleted Successfully!",
+      "Success!",
+      3000,
+      null,
+      null,
+      ''
+    )
+    setUpdate('');
+    selectedTodoItemsChangeAction([])
+   }
+    else if(res.status==='500'){
+      NotificationManager.warning(
+        "Internal Server Error",
+        "Error!",
+        3000,
+        null,
+        null,
+        ''
+      );
+      selectedTodoItemsChangeAction([])
+    }
+    setUpdate('');
+  
+  }
+  else{
+    
+    await selectedItems.forEach( async (item) => {
+      await deleteAllAgenciesApi(item);
+    });
+    setUpdate('');
+    selectedTodoItemsChangeAction([])
+  }
+   loadAgencies();
+}
+
   // const { messages } = intl;
 
   return (
@@ -357,7 +368,7 @@ const updateAgency = (currentAgency)=>{
       <Button ref={ref} className='cell' hidden onClick={()=>{setEModalOpen(!emodalOpen)}}>
         update
       </Button>
-      <UpdateAgencyModal
+       <UpdateAgencyModal
       setUpdate={setUpdate}
       selectedItems = {selectedItems}
       toggleModal={() => setEModalOpen(!emodalOpen)}
@@ -365,7 +376,7 @@ const updateAgency = (currentAgency)=>{
         agencyUpdate={agencyUpdate}
         setAgencyUpdate={setAgencyUpdate}
         selectedTodoItemsChangeAction={selectedTodoItemsChangeAction}
-      />
+      /> 
     </>
   );
 };
