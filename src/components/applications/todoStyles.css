@@ -1,0 +1,36 @@
+.delete-button-class{
+    background-color:#ff1e1e;
+    border: none;
+    cursor:pointer;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+.delete-button-class:hover{
+    background-color:#ff1e1e;
+    border: none;
+    cursor:pointer;
+    margin-left: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.edit-button-class{
+    background-color:#3094e6;
+    border: none;
+    cursor:pointer;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+.edit-button-class:hover{
+    background-color:#3094e6;
+    border: none;
+    cursor:pointer;
+    margin-left: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+}

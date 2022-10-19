@@ -58,7 +58,6 @@ const TodoApp = ({
   const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
   const [lastChecked, setLastChecked] = useState(null);
-
   const [users, setUsers] = useState([]);
   const [update, setUpdate] = useState([]);
 

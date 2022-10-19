@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
+    "@mui/icons-material": "^5.10.9",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
